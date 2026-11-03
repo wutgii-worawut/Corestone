@@ -1,0 +1,5 @@
+package com.wutstack.corestone
+
+import io.flutter.embedding.android.FlutterActivity
+
+class MainActivity : FlutterActivity()
