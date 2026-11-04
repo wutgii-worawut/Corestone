@@ -69,5 +69,34 @@
   "maintenanceBody": "We're improving the service right now. Try again in a little while.",
   "secureConnectionTitle": "Can't connect securely",
   "secureConnectionBody": "We couldn't verify the server, so we stopped to keep your data safe. If you're on public Wi-Fi, switch networks and try again.",
-  "offlineBanner": "No network connection"
+  "offlineBanner": "No network connection",
+  "sendFeedback": "Send feedback",
+  "feedbackIntro": "Tell us how the app works for you. We read every message.",
+  "feedbackRatingLabel": "Rate your experience",
+  "feedbackStars": "{rating} of {max} stars",
+  "@feedbackStars": {
+    "placeholders": {
+      "rating": {
+        "type": "int"
+      },
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackRatingRequired": "Choose a rating.",
+  "feedbackMessageLabel": "Your feedback",
+  "feedbackMessageHint": "What works well, and what could be better?",
+  "feedbackMessageTooLong": "Keep it to {max} characters or fewer.",
+  "@feedbackMessageTooLong": {
+    "placeholders": {
+      "max": {
+        "type": "int"
+      }
+    }
+  },
+  "feedbackSubmit": "Send",
+  "feedbackThanksTitle": "Thanks for your feedback",
+  "feedbackThanksBody": "It helps us make the app better.",
+  "feedbackBackToSettings": "Back to Settings"
 }

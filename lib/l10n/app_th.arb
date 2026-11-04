@@ -52,5 +52,17 @@
   "maintenanceBody": "ขณะนี้เรากำลังปรับปรุงบริการ โปรดลองอีกครั้งในอีกสักครู่",
   "secureConnectionTitle": "เชื่อมต่ออย่างปลอดภัยไม่ได้",
   "secureConnectionBody": "เรายืนยันเซิร์ฟเวอร์ไม่ได้ จึงหยุดการเชื่อมต่อเพื่อปกป้องข้อมูลของคุณ หากใช้ Wi-Fi สาธารณะ ให้เปลี่ยนเครือข่ายแล้วลองอีกครั้ง",
-  "offlineBanner": "ไม่มีการเชื่อมต่อเครือข่าย"
+  "offlineBanner": "ไม่มีการเชื่อมต่อเครือข่าย",
+  "sendFeedback": "ส่งความคิดเห็น",
+  "feedbackIntro": "บอกเราว่าแอปนี้ใช้งานเป็นอย่างไรบ้าง เราอ่านทุกข้อความ",
+  "feedbackRatingLabel": "ให้คะแนนประสบการณ์ของคุณ",
+  "feedbackStars": "{rating} จาก {max} ดาว",
+  "feedbackRatingRequired": "โปรดเลือกคะแนน",
+  "feedbackMessageLabel": "ความคิดเห็นของคุณ",
+  "feedbackMessageHint": "อะไรที่ใช้งานได้ดี และอะไรที่ควรปรับปรุง",
+  "feedbackMessageTooLong": "โปรดเขียนไม่เกิน {max} ตัวอักษร",
+  "feedbackSubmit": "ส่ง",
+  "feedbackThanksTitle": "ขอบคุณสำหรับความคิดเห็น",
+  "feedbackThanksBody": "ความคิดเห็นของคุณช่วยให้เราพัฒนาแอปให้ดีขึ้น",
+  "feedbackBackToSettings": "กลับไปที่การตั้งค่า"
 }

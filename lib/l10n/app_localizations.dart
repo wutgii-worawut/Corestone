@@ -415,6 +415,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No network connection'**
   String get offlineBanner;
+
+  /// No description provided for @sendFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Send feedback'**
+  String get sendFeedback;
+
+  /// No description provided for @feedbackIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us how the app works for you. We read every message.'**
+  String get feedbackIntro;
+
+  /// No description provided for @feedbackRatingLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate your experience'**
+  String get feedbackRatingLabel;
+
+  /// No description provided for @feedbackStars.
+  ///
+  /// In en, this message translates to:
+  /// **'{rating} of {max} stars'**
+  String feedbackStars(int rating, int max);
+
+  /// No description provided for @feedbackRatingRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a rating.'**
+  String get feedbackRatingRequired;
+
+  /// No description provided for @feedbackMessageLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Your feedback'**
+  String get feedbackMessageLabel;
+
+  /// No description provided for @feedbackMessageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'What works well, and what could be better?'**
+  String get feedbackMessageHint;
+
+  /// No description provided for @feedbackMessageTooLong.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep it to {max} characters or fewer.'**
+  String feedbackMessageTooLong(int max);
+
+  /// No description provided for @feedbackSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Send'**
+  String get feedbackSubmit;
+
+  /// No description provided for @feedbackThanksTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for your feedback'**
+  String get feedbackThanksTitle;
+
+  /// No description provided for @feedbackThanksBody.
+  ///
+  /// In en, this message translates to:
+  /// **'It helps us make the app better.'**
+  String get feedbackThanksBody;
+
+  /// No description provided for @feedbackBackToSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to Settings'**
+  String get feedbackBackToSettings;
 }
 
 class _AppLocalizationsDelegate

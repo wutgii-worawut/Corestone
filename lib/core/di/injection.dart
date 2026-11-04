@@ -24,6 +24,7 @@ import 'package:corestone/features/auth/data/token_store.dart';
 import 'package:corestone/features/auth/domain/account_repository.dart';
 import 'package:corestone/features/auth/domain/auth_repository.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
+import 'package:corestone/features/feedback/data/feedback_repository.dart';
 import 'package:corestone/features/system/system_pages.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -64,6 +65,9 @@ void configureDependencies(
       ),
     )
     ..registerSingleton<AccountRepository>(demo ?? RestAccountRepository(sl()))
+    ..registerSingleton<FeedbackRepository>(
+      config.demoMode ? FakeFeedbackRepository() : RestFeedbackRepository(sl()),
+    )
     ..registerSingleton<Prefs>(Prefs(SharedPreferencesAsync()))
     ..registerSingleton<ThemeCubit>(
       ThemeCubit(sl()),

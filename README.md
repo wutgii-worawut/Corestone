@@ -24,8 +24,9 @@ The dev flavor talks to the local mock API. Start it first with
 the password `demo-password`.
 
 To run with no backend at all, add `--dart-define=DEMO_MODE=true` to a dev build.
-Sign-in, sign-out and account deletion then go to an in-memory fake, and any
-well-formed email and password sign in. Stage and prod refuse to start with it.
+Sign-in, sign-out, account deletion and feedback then go to an in-memory fake,
+and any well-formed email and password sign in. Stage and prod refuse to start
+with it.
 
 ```sh
 fvm flutter run --flavor dev --dart-define-from-file=config/dev.json --dart-define=DEMO_MODE=true

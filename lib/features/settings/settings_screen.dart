@@ -53,6 +53,11 @@ class SettingsScreen extends StatelessWidget {
           ),
           const _BiometricTile(),
           ListTile(
+            leading: const Icon(Icons.feedback_outlined),
+            title: Text(l10n.sendFeedback),
+            onTap: () => unawaited(context.router.push(const FeedbackRoute())),
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: Text(l10n.signOut),
             onTap: () => unawaited(_confirmSignOut(context)),
