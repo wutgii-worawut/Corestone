@@ -27,8 +27,7 @@ class Prefs {
 
   Future<String?> getString(String key) => _prefs.getString(key);
 
-  Future<List<String>?> getStringList(String key) =>
-      _prefs.getStringList(key);
+  Future<List<String>?> getStringList(String key) => _prefs.getStringList(key);
 
   Future<void> remove(String key) => _prefs.remove(key);
 
