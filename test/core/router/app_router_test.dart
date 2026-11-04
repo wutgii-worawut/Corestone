@@ -1,6 +1,8 @@
 import 'package:corestone/app.dart';
 import 'package:corestone/core/config/app_config.dart';
 import 'package:corestone/core/di/injection.dart';
+import 'package:corestone/core/storage/prefs.dart';
+import 'package:corestone/core/theme/theme_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
@@ -40,5 +42,31 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Corestone stage'), findsOneWidget);
+  });
+
+  testWidgets('Settings then Theme switches to dark and saves it', (
+    tester,
+  ) async {
+    await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Settings'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('System'), findsOneWidget);
+
+    await tester.tap(find.text('Theme'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Dark'));
+    await tester.pumpAndSettle();
+
+    final context = tester.element(find.text('Dark'));
+    expect(Theme.of(context).brightness, Brightness.dark);
+    expect(await sl<Prefs>().getString(ThemeCubit.key), 'dark');
+
+    await tester.pageBack();
+    await tester.pumpAndSettle();
+
+    expect(find.widgetWithText(AppBar, 'Settings'), findsOneWidget);
+    expect(find.text('Dark'), findsOneWidget);
   });
 }
