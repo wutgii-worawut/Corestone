@@ -4,11 +4,34 @@ Corestone is the company Flutter template for new Android and iOS apps.
 It ports the kept parts of [Skelter by SolGuruz](https://github.com/solguruz/skelter)
 into a fresh Flutter scaffold. See `NOTICE` for attribution.
 
+## Start a new project from this template
+
+1. Create a repository from Corestone. On GitHub use "Use this template" (an
+   admin must first tick "Template repository" in the repo settings), or clone
+   it and point `origin` at the new repository.
+2. Install the pinned Flutter: `fvm install`.
+3. Rename it to your app in a clean checkout:
+
+   ```sh
+   fvm dart run tool/new_project.dart --name acme_app --org com.acme --display-name "Acme"
+   ```
+
+   This rewrites the package name, imports, Android ids, iOS bundle ids and
+   app names, then runs `pub get` and the import-order fix. Android ids become
+   `com.acme.acme_app`; iOS bundle ids become `com.acme.acmeApp`.
+4. Check it: `fvm flutter analyze`, `fvm flutter test`, and
+   `fvm flutter build apk --debug --flavor dev --dart-define-from-file=config/dev.json`.
+5. Commit, then do the owner tasks in `TEMPLATE.md` ("What the owner still does
+   by hand"): Firebase, deep-link domain, release keystore, Apple team.
+
+`TEMPLATE.md` has the full guide. `spec/open-items.md` lists what the template
+has not proven yet, such as iOS.
+
 ## Requirements
 
 - [FVM](https://fvm.app) with Flutter 3.47.9 (`fvm install` reads `.fvmrc`).
 - Android Studio with an emulator for Android work.
-- A Mac with Xcode for local iOS work. Without one, CI builds iOS on a macOS runner.
+- A Mac with Xcode for iOS work. iOS has not been built or run yet; see `spec/open-items.md`.
 
 ## Daily commands
 
@@ -155,9 +178,12 @@ tool/update_goldens.sh ci       # CI goldens only
 tool/update_goldens.sh verify   # run the golden tests as CI does
 ```
 
-## Plan
+## Plan and status
 
-`spec/template-plan.md` lists the PRs that build the template, in order.
+- `spec/template-plan.md` is the original 18-PR plan, with an execution record in Appendix F.
+- `spec/decisions.md` lists the product and process decisions the template follows.
+- `spec/open-items.md` lists what is not done or not proven.
+- `hand-off/README.md` is the starting point for the next person or agent session.
 
 ## CI
 

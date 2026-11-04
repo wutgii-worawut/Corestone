@@ -1043,7 +1043,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Depends on.** CS-13 and CS-14.
 
-**Operator amendment.** The done check is a local script, not a CI job: a project generated from the template passes analyze, test and an Android build, checked by `tool/template_smoke.sh`. GitHub CI is disabled, so PRs show no checks and the evidence is local. iOS is skipped for now and reported as unverified. The App Distribution workflow exists but stays disabled.
+**Operator amendment.** The done check is a local script, not a CI job. A project generated from the template passes analyze, test and an Android build, checked by `tool/template_smoke.sh`. GitHub CI is disabled, so PRs show no checks and the evidence is local. iOS is skipped for now and reported as unverified. The App Distribution workflow exists but stays disabled.
 
 **Files.**
 
@@ -1067,9 +1067,8 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] `tool/template_smoke.sh` is the done check. Run it locally and read every step.
 - [ ] `apksigner verify --print-certs` on the prod release APK shows the `key.properties` key when the file is present and the debug key when it is absent.
 
-**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
+**Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe. Lanes 1, 2, 4 and 7 are deferred, because distribution stays disabled and iOS is unverified.
 
-- [ ] Lanes 1, 2, 4 and 7 are deferred: distribution stays disabled and iOS is unverified.
 - [ ] Lane 1. Regression lane against trunk. Trunk builds without distribution. Record that, then push to a test branch at the head. Save `distribution.png`. Pass when the App Distribution console lists the new build.
 - [ ] Lane 2. Install the distributed build from the tester invite on the emulator. Save `tester-install.png`. Pass when it launches.
 - [ ] Lane 3. Read the `template-smoke` Android step. Save `smoke-android.png`. Pass when the renamed APK builds.
@@ -1180,3 +1179,39 @@ Paths are under `D:\my_project\skelter`. Each row is a place tied to the old app
 | Release signed with the debug key | `android/app/build.gradle` | CS-15 |
 | Tests tied to removed features | about 36 test files and 18 Firebase Auth test files, three Patrol tests | Not ported, CS-13 writes new flows |
 | SolGuruz contact and branding in docs | `CODE_OF_CONDUCT.md` line 58, `README.md`, `CONTRIBUTING.md` | CS-00 writes new docs and `NOTICE` |
+
+## Appendix F. Execution record
+
+The program finished on 2026-11-05 at main `437662a`. Every PR below was merged by the operator. The done criterion was amended by the operator to analyze, test and an Android build of a generated project, checked by `tool/template_smoke.sh`, which passed 8 of 8 steps in 119 s on main. iOS was skipped and stays unverified.
+
+| Plan id | PR | What landed |
+|---|---|---|
+| CS-00 | #1 | License, NOTICE, lints, lane scripts |
+| CS-01 | #2 | dev, stage and prod flavors on both platforms |
+| CS-02 | #3 | Core shell with GetIt, AutoRoute and Prefs |
+| CI change | #4 | PR CI cut to analyze and test |
+| CS-03 | #5 | Material 3 theme |
+| CS-04 | #6 | English and Thai, Noto Sans Thai fallback, golden tool |
+| CS-05 | #7, #10 | Responsive layout. #8 reverted it by mistake and #10 restored it |
+| CS-06 | #9 | ApiClient, sealed failures, pinning, mock server |
+| CS-07 | #11 | Secure session with single-flight token refresh |
+| CS-08 | #12 | Login, sign-out, account deletion, demo mode, reinstall wipe |
+| CS-09 | #13 | App PIN lock |
+| CS-10 | #14 | Biometric shortcut |
+| CS-11 | #15 | Optional FCM |
+| CS-12 | #16 | System pages and offline banner |
+| CS-16 | #17 | Deep links behind session and lock |
+| CS-17 | #18 | Feedback on the REST API |
+| CS-13 | #19 | Patrol end-to-end suite |
+| CS-14 | #20 | Project generator |
+| CS-15 | #21 | Release signing, template smoke check, disabled distribution workflow |
+
+Changes from this plan, in order of impact.
+
+- GitHub CI was turned off by the operator. Every verification ran locally, and the ten-lane swarm, perf probes and review videos were run only where a brief asked for them.
+- iOS was never built. `spec/open-items.md` lists everything that depends on it.
+- The template-smoke CI job became the local script `tool/template_smoke.sh`.
+- Stacked PRs caused two merge mistakes, a stale base on #2 and the accidental revert in #8. After #9 the program branched each PR from main.
+- Lanes moved from Pixel_5 to Pixel_10_Pro after a biometric lane locked Pixel_5.
+
+`spec/decisions.md` holds the decisions and `spec/open-items.md` the unfinished and unproven items.
