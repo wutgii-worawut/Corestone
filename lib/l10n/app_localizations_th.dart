@@ -34,8 +34,8 @@ class AppLocalizationsTh extends AppLocalizations {
   String get languageSystem => 'ตามระบบ';
 
   @override
-  String get languageEnglish => 'ภาษาอังกฤษ';
+  String get languageEnglish => 'English';
 
   @override
-  String get languageThai => 'ภาษาไทย';
+  String get languageThai => 'ไทย';
 }

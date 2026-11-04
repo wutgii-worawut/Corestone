@@ -82,11 +82,11 @@ void main() {
 
     await tester.tap(find.text('Language'));
     await tester.pumpAndSettle();
-    await tester.tap(find.text('Thai'));
+    await tester.tap(find.text('ไทย'));
     await tester.pumpAndSettle();
 
     expect(find.widgetWithText(AppBar, 'ภาษา'), findsOneWidget);
-    expect(find.text('ภาษาไทย'), findsOneWidget);
+    expect(find.text('ไทย'), findsOneWidget);
     expect(await sl<Prefs>().getString(LocaleCubit.key), 'th');
 
     // pageBack() finds the button by its English tooltip.

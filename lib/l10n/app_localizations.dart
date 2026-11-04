@@ -155,7 +155,7 @@ abstract class AppLocalizations {
   /// No description provided for @languageThai.
   ///
   /// In en, this message translates to:
-  /// **'Thai'**
+  /// **'ไทย'**
   String get languageThai;
 }
 
