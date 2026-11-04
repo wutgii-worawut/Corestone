@@ -15,6 +15,7 @@ abstract final class AppTheme {
         brightness: brightness,
       ),
       fontFamily: AppTextStyles.fontFamily,
+      fontFamilyFallback: AppTextStyles.fontFamilyFallback,
       textTheme: AppTextStyles.textTheme,
       extensions: [colors],
     );

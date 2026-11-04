@@ -1,7 +1,9 @@
 import 'package:corestone/core/di/injection.dart';
+import 'package:corestone/core/locale/locale_cubit.dart';
 import 'package:corestone/core/router/app_router.dart';
 import 'package:corestone/core/theme/app_theme.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
+import 'package:corestone/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -11,14 +13,20 @@ class App extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final routerConfig = sl<AppRouter>().config();
-    return BlocProvider.value(
-      value: sl<ThemeCubit>(),
-      child: BlocBuilder<ThemeCubit, ThemeMode>(
-        builder: (context, themeMode) => MaterialApp.router(
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider.value(value: sl<ThemeCubit>()),
+        BlocProvider.value(value: sl<LocaleCubit>()),
+      ],
+      child: Builder(
+        builder: (context) => MaterialApp.router(
           title: 'Corestone',
           theme: AppTheme.light,
           darkTheme: AppTheme.dark,
-          themeMode: themeMode,
+          themeMode: context.watch<ThemeCubit>().state,
+          locale: context.watch<LocaleCubit>().state,
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
           routerConfig: routerConfig,
         ),
       ),

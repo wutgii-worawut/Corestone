@@ -30,6 +30,27 @@ tool/lanes/android.sh launch dev
 tool/lanes/android.sh shot home.png
 ```
 
+## Localization
+
+Strings live in `lib/l10n/app_en.arb` (template) and `lib/l10n/app_th.arb`.
+`flutter pub get` regenerates `AppLocalizations`. Read strings with `context.l10n`.
+Add a key to every ARB file: `test/l10n/untranslated_test.dart` fails when any
+locale misses one.
+
+## Goldens
+
+Golden tests carry the `golden` tag. Each has a platform golden for local runs
+and a CI golden that must be rendered on Linux to match the ubuntu runner.
+`tool/update_goldens.sh` regenerates both. On Windows it renders the CI goldens
+inside WSL Ubuntu, which needs Flutter 3.47.9 at `~/flutter-3.47.9`
+(override with `WSL_FLUTTER`).
+
+```sh
+tool/update_goldens.sh          # platform goldens, then CI goldens
+tool/update_goldens.sh ci       # CI goldens only
+tool/update_goldens.sh verify   # run the golden tests as CI does
+```
+
 ## Plan
 
 `spec/template-plan.md` lists the PRs that build the template, in order.

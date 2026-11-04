@@ -57,3 +57,6 @@ config/*.local.json
 android/key.properties
 *.jks
 *.keystore
+
+# Alchemist writes diff images here when a golden fails
+test/**/failures/
