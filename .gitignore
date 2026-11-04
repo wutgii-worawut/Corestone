@@ -49,3 +49,11 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+# Firebase and per-developer config, injected by CI or tool/firebase_config.sh
+google-services.json
+GoogleService-Info.plist
+lib/firebase_options_*.dart
+config/*.local.json
+android/key.properties
+*.jks
+*.keystore
