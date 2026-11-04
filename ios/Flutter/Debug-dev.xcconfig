@@ -1,3 +1,4 @@
 #include "Debug.xcconfig"
 APP_DISPLAY_NAME = Corestone Dev
 PRODUCT_BUNDLE_IDENTIFIER = com.wutstack.corestone.dev
+DEEP_LINK_HOST = dev.links.example.com

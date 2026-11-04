@@ -1,5 +1,6 @@
 {
   "APP_FLAVOR": "prod",
   "API_BASE_URL": "https://api.example.com",
-  "CERT_SHA256": ""
+  "CERT_SHA256": "",
+  "DEEP_LINK_HOST": "links.example.com"
 }

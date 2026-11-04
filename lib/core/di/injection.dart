@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:corestone/core/config/app_config.dart';
+import 'package:corestone/core/deep_link/deep_link_service.dart';
 import 'package:corestone/core/locale/locale_cubit.dart';
 import 'package:corestone/core/network/api_client.dart';
 import 'package:corestone/core/network/auth_interceptor.dart';
@@ -9,7 +10,6 @@ import 'package:corestone/core/network/connectivity_cubit.dart';
 import 'package:corestone/core/push/firebase_push_messaging.dart';
 import 'package:corestone/core/push/push_service.dart';
 import 'package:corestone/core/router/app_router.dart';
-import 'package:corestone/core/router/app_router.gr.dart';
 import 'package:corestone/core/router/auth_guard.dart';
 import 'package:corestone/core/storage/prefs.dart';
 import 'package:corestone/core/storage/secure_store.dart';
@@ -87,12 +87,7 @@ void configureDependencies(
         api: sl(),
         plainApi: authApi,
         flavor: config.flavor.name,
-        // A tap opens the app to Home. CS-16 routes deep links from the data.
-        onTap: (_) {
-          if (sl<SessionCubit>().state is SessionAuthenticated) {
-            unawaited(sl<AppRouter>().replaceAll([const HomeShellRoute()]));
-          }
-        },
+        onTap: (data) => sl<DeepLinkService>().openPush(data),
       ),
       dispose: (service) => service.close(),
     )
@@ -103,6 +98,15 @@ void configureDependencies(
     )
     ..registerSingleton<AppRouter>(AppRouter(AuthGuard(sl())))
     ..registerSingleton<SystemPages>(SystemPages(sl<AppRouter>()))
+    ..registerSingleton<DeepLinkService>(
+      DeepLinkService(
+        host: config.deepLinkHost,
+        session: sl<SessionCubit>(),
+        lock: sl<AppLockCubit>(),
+        navigate: (target) => unawaited(target.openIn(sl<AppRouter>())),
+      ),
+      dispose: (service) => service.close(),
+    )
     ..registerSingleton<ConnectivityCubit>(
       ConnectivityCubit(connectivity ?? connectivityChanges(Connectivity())),
       dispose: (cubit) => cubit.close(),

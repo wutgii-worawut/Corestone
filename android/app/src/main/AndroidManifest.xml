@@ -29,6 +29,19 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
+            <!-- DeepLinkService opens links after sign-in and the PIN lock, so
+                 Flutter must not route them itself. -->
+            <meta-data
+                android:name="flutter_deeplinking_enabled"
+                android:value="false" />
+            <!-- App Links. deepLinkHost is set per flavor in build.gradle.kts
+                 and must serve /.well-known/assetlinks.json (see README). -->
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" android:host="${deepLinkHost}" />
+            </intent-filter>
         </activity>
         <!-- FCM shows background notifications on the channel PushService
              creates, with this icon. -->

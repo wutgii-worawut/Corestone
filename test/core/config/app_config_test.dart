@@ -103,4 +103,18 @@ void main() {
     expect(() => parse('stage'), throwsStateError);
     expect(() => parse('prod'), throwsStateError);
   });
+
+  test('DEEP_LINK_HOST is off when empty and must be a bare host', () {
+    AppConfig parse(String host) => AppConfig.parse({
+      'APP_FLAVOR': 'dev',
+      'API_BASE_URL': 'https://x',
+      'DEEP_LINK_HOST': host,
+    });
+    expect(parse('').deepLinkHost, isEmpty);
+    const host = 'dev.links.example.com';
+    expect(parse(host).deepLinkHost, host);
+    expect(() => parse('https://links.example.com'), throwsStateError);
+    expect(() => parse('links.example.com/app'), throwsStateError);
+    expect(() => parse('Links.Example.com'), throwsStateError);
+  });
 }

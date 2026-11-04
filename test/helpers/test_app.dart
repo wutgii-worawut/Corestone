@@ -16,6 +16,7 @@ import 'fake_biometric_service.dart';
 
 const testTokens = AuthTokens(accessToken: 'a', refreshToken: 'r');
 const testPin = '135790';
+const testLinkHost = 'stage.links.example.com';
 
 /// Registers the app on empty storage for the stage flavor and restores the
 /// session and lock, as bootstrap does. A signed-in user has [testPin] set
@@ -41,6 +42,7 @@ Future<void> configureTestApp({
       apiBaseUrl: 'https://api-stage.example.com',
       certPins: [],
       demoMode: demoMode,
+      deepLinkHost: testLinkHost,
     ),
     // One iteration on the test isolate keeps tests fast and lets fake
     // async run the hash; the stored format is the same.

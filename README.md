@@ -54,7 +54,46 @@ To turn push on for a flavor:
 
 The app asks for notification permission after sign in, registers the token with
 `POST /devices`, re-registers on token refresh, and sends `DELETE /devices` on sign
-out. Tapping a notification opens the app to Home.
+out. Tapping a notification opens its `link` data field as a deep link, or Home
+when it has none.
+
+## Deep links
+
+`https://<DEEP_LINK_HOST>/<path>` opens a screen. Each flavor has its own host,
+set in three places that `test/core/deep_link/deep_link_host_test.dart` keeps
+equal: `DEEP_LINK_HOST` in `config/<flavor>.json`, `deepLinkHost` in the
+flavor's block of `android/app/build.gradle.kts`, and `DEEP_LINK_HOST` in
+`ios/Flutter/<Config>-<flavor>.xcconfig`. The template ships placeholders
+(`dev.links.example.com`, `stage.links.example.com`, `links.example.com`).
+
+| Path | Opens |
+| --- | --- |
+| `/`, `/home` | Home |
+| `/settings` | Settings |
+| `/settings/theme` | Theme, over Settings |
+| `/settings/language` | Language, over Settings |
+| anything else on the host | Home |
+
+Links for another host or scheme, http included, are ignored. A link opens only
+after sign in and the PIN lock: one that arrives signed out waits through login
+and PIN setup, one that arrives locked waits for unlock. Only the newest waiting
+link opens, and signing out drops it. To make a screen linkable, add it to
+`lib/core/deep_link/deep_link_routes.dart`.
+
+For the OS to send links to the app instead of the browser, the owner of each
+host must serve, over https with no redirect:
+
+1. `https://<host>/.well-known/assetlinks.json`, listing the flavor's
+   application id and the SHA-256 fingerprint of its signing certificate (the
+   Play App Signing key for Play builds). Check it with
+   `adb shell pm get-app-links <application id>`.
+2. `https://<host>/.well-known/apple-app-site-association`, JSON with no
+   extension, with an `applinks` entry for `<TeamID>.<bundle id>`. Also enable
+   the Associated Domains capability for the App ID in your Apple team.
+   `ios/Runner/Runner.entitlements` already asks for `applinks:$(DEEP_LINK_HOST)`.
+
+Until then, test on Android by naming the package, which skips verification:
+`adb shell am start -a android.intent.action.VIEW -d "https://dev.links.example.com/settings" com.wutstack.corestone.dev`.
 
 ## Verification lanes
 
