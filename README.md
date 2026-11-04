@@ -33,3 +33,9 @@ tool/lanes/android.sh shot home.png
 ## Plan
 
 `spec/template-plan.md` lists the PRs that build the template, in order.
+
+## CI
+
+Pull requests run `analyze` and `test` only (`.github/workflows/ci.yml`).
+Android and iOS builds live in `.github/workflows/build.yml` and run only when
+started by hand: `gh workflow run build.yml --ref <branch>`.
