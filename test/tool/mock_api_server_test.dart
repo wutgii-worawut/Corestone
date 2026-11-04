@@ -144,4 +144,9 @@ void main() {
     expect(removed.$1, 204);
     expect(devices, isEmpty);
   });
+
+  test('quit answers, then stops listening', () async {
+    expect((await send('GET', '/__mock/quit')).$1, 204);
+    await expectLater(send('GET', '/me'), throwsA(isA<IOException>()));
+  });
 }

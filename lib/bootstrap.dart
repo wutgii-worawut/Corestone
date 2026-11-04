@@ -16,18 +16,24 @@ import 'package:flutter/widgets.dart';
 void bootstrap() {
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    configureDependencies(AppConfig.fromEnvironment());
-    await wipeSecretsAfterReinstall(sl(), sl());
-    // Load the saved theme, language, session and lock before the first frame.
-    await (
-      sl<ThemeCubit>().load(),
-      sl<LocaleCubit>().load(),
-      sl<SessionCubit>().restore(),
-    ).wait;
-    await sl<AppLockCubit>().load();
+    await initApp();
     runApp(const App());
     sl<DeepLinkService>().start(AppLinks().uriLinkStream);
     // After the first frame, so a slow Firebase start never delays it.
     unawaited(sl<PushService>().start(sl()));
   }, (error, stack) => debugPrint('Uncaught zone error: $error\n$stack'));
+}
+
+/// Everything before the first frame. The Patrol suite runs it too, so it
+/// starts the app the way a user does.
+Future<void> initApp() async {
+  configureDependencies(AppConfig.fromEnvironment());
+  await wipeSecretsAfterReinstall(sl(), sl());
+  // Load the saved theme, language, session and lock before the first frame.
+  await (
+    sl<ThemeCubit>().load(),
+    sl<LocaleCubit>().load(),
+    sl<SessionCubit>().restore(),
+  ).wait;
+  await sl<AppLockCubit>().load();
 }

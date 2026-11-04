@@ -107,6 +107,33 @@ tool/lanes/android.sh launch dev
 tool/lanes/android.sh shot home.png
 ```
 
+## End-to-end tests (Patrol)
+
+`integration_test/app_test.dart` drives the real app on an Android device with
+[Patrol](https://patrol.leancode.co): sign in and set a PIN, the 30 s background
+lock and unlock, five wrong PINs signing out, Thai and dark theme, feedback, a
+deep link held behind the lock, and sign-out keeping theme and language. Each
+test starts from cleared app data and needs the device language set to English.
+
+```sh
+fvm dart pub global activate patrol_cli          # once
+ANDROID_SERIAL=emulator-5554 tool/run_patrol.sh  # starts and stops the mock API
+```
+
+`tool/run_patrol.sh` starts `tool/mock_api/server.dart`, runs `patrol test` on the
+dev flavor with `config/dev.json`, stops the server and exits non-zero when a test
+fails. Run one file with `tool/run_patrol.sh integration_test/<file>_test.dart`. A
+test fails at once with a clear message when the mock API is not reachable. The
+two lock tests wait out the real background timeout, so the suite takes a few
+minutes.
+
+iOS is not wired yet: it needs a `RunnerUITests` UI test target, which is made in
+Xcode on a Mac. Follow "iOS setup" in the Patrol docs: add the target, give it a
+`RunnerUITests.m` with `PATROL_INTEGRATION_TEST_IOS_RUNNER(RunnerUITests)`, add
+`pod 'patrol'` (or the Swift package) to it, and add the target to the test
+action of the existing `dev` scheme. Then run `patrol test --flavor dev` on a
+simulator.
+
 ## Localization
 
 Strings live in `lib/l10n/app_en.arb` (template) and `lib/l10n/app_th.arb`.
