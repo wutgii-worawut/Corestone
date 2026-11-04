@@ -15,6 +15,37 @@ The 18-PR program in `spec/template-plan.md` is finished. Appendix F there maps
 each plan id to its merged PR. The done check, `tool/template_smoke.sh`, passed
 on main. iOS has never been built.
 
+## How to start the next session
+
+Open Claude Code in `D:\my_project\Corestone` and paste one of these. The
+first line makes the agent load this hand-off before it touches anything.
+
+Pick up work from the open items:
+
+```
+/pstack:poteto-mode อ่าน hand-off/README.md, spec/decisions.md และ spec/open-items.md ก่อน
+แล้วทำ <ชื่อเรื่องจาก open-items> เป็น PR เดียวจาก main ตามกฎใน decisions.md
+done คือ <สิ่งที่ต้องเห็น เช่น analyze/test ผ่าน และ lane บน Pixel_10_Pro>
+```
+
+Only get a status report, change nothing:
+
+```
+/pstack:poteto-mode อ่าน hand-off/README.md และ spec/open-items.md แล้วสรุปสถานะ
+กับสิ่งที่ควรทำต่อ ยังไม่ต้องแก้โค้ด
+```
+
+Start a new app from the template (in the new app's repo, not here):
+
+```
+อ่าน TEMPLATE.md แล้วรัน tool/new_project.dart --name <name> --org <org> --display-name "<Name>"
+ตรวจด้วย fvm flutter analyze, fvm flutter test และ build apk flavor dev
+```
+
+The OpenViking plugin also recalls the notes in
+`viking://~/resources/Corestone/notes/` on its own; the files above stay the
+source of truth.
+
 ## Ground rules from the operator
 
 The full list is in `spec/decisions.md`. The ones that bite:

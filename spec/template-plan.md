@@ -18,7 +18,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 ### Arm the program
 
-- [ ] State the protocol and this plan to the operator, then stop. Start execution only on the operator's explicit go.
+- [x] State the protocol and this plan to the operator, then stop. Start execution only on the operator's explicit go.
 - [ ] Read these at program start. Re-read them at every tick.
   - [ ] `pstack/skills/poteto-mode/playbooks/autopilot-stack.md` from the installed plugin.
   - [ ] `pstack/skills/swarm/SKILL.md` from the installed plugin.
@@ -31,7 +31,7 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 
 ### Spawn owners
 
-- [ ] Spawn one owner per PR with the full lifecycle the execution playbook names.
+- [x] Spawn one owner per PR with the full lifecycle the execution playbook names.
 - [ ] Follow this dependency graph. Base dependent work on the parent branch, because the execution playbook stacks.
   - [ ] CS-00, then CS-01, then CS-02 run in order from `main`.
   - [ ] CS-03, CS-05, CS-06 and CS-14 are independent after CS-02.
@@ -45,8 +45,8 @@ Tests alone are not sufficient verification. A PR is verified only when its unit
 ### PR mechanics, for every PR
 
 - [ ] Resolve the forge once. Default to `gh`; if `command -v origin` succeeds and Origin can resolve the repository, use `origin pr` for every PR operation. Record any fallback to `gh`. Never require `gt`.
-- [ ] Open the PR ready, never draft, per **Opening a PR**. Use `gh pr create --base <base-branch>`. A stack child targets its parent branch.
-- [ ] Run `fvm flutter analyze` and `fvm flutter test` once before the PR-facing push. Push with hooks on.
+- [x] Open the PR ready, never draft, per **Opening a PR**. Use `gh pr create --base <base-branch>`. A stack child targets its parent branch.
+- [x] Run `fvm flutter analyze` and `fvm flutter test` once before the PR-facing push. Push with hooks on.
 - [ ] Run `/deslop` before each commit and `/no-comments` before review. `/deslop` ships in `cursor-team-kit`, so in Claude Code skip it with a one-line note.
 - [ ] Triage every Bugbot and security-reviewer comment per `../references/bugbot-triage.md`. Bugbot is Cursor-only, so in Claude Code this applies to human and CI review comments.
 - [ ] Rebase onto current trunk before the code-ready report and babysit. Keep that merge base in fix rounds. Rebase again only at merge prep, on a `git merge-tree` conflict with trunk, on a CI failure that comes from a change on trunk, or when a known concurrent change to the same files lands.
@@ -72,26 +72,26 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `NOTICE` crediting SolGuruz Skelter under Apache-2.0.
-- [ ] Create `LICENSE` with the Apache-2.0 text.
-- [ ] Edit `.gitignore` to exclude `google-services.json`, `GoogleService-Info.plist`, `lib/firebase_options_*.dart` and `config/*.local.json`.
-- [ ] Edit `analysis_options.yaml` with the lint set ported from `skelter/analysis_options.yaml`.
-- [ ] Create `.github/workflows/ci.yml`.
-- [ ] Create `tool/lanes/android.sh` and `tool/lanes/ios.sh`.
-- [ ] Edit `README.md`.
+- [x] Create `NOTICE` crediting SolGuruz Skelter under Apache-2.0.
+- [x] Create `LICENSE` with the Apache-2.0 text.
+- [x] Edit `.gitignore` to exclude `google-services.json`, `GoogleService-Info.plist`, `lib/firebase_options_*.dart` and `config/*.local.json`.
+- [x] Edit `analysis_options.yaml` with the lint set ported from `skelter/analysis_options.yaml`.
+- [x] Create `.github/workflows/ci.yml`.
+- [x] Create `tool/lanes/android.sh` and `tool/lanes/ios.sh`.
+- [x] Edit `README.md`.
 
 **Build.**
 
-- [ ] `ci.yml` runs `analyze`, `test`, `build-android` on ubuntu and `build-ios` with `flutter build ios --no-codesign` on macos, every job reading Flutter from `.fvmrc` through `flutter-version-file`.
-- [ ] `tool/lanes/android.sh` installs a flavor, launches it, waits for the first frame and saves `adb exec-out screencap`. `tool/lanes/ios.sh` does the same with `xcrun simctl`.
+- [x] `ci.yml` runs `analyze`, `test`, `build-android` on ubuntu and `build-ios` with `flutter build ios --no-codesign` on macos, every job reading Flutter from `.fvmrc` through `flutter-version-file`.
+- [x] `tool/lanes/android.sh` installs a flavor, launches it, waits for the first frame and saves `adb exec-out screencap`. `tool/lanes/ios.sh` does the same with `xcrun simctl`.
 
 **You see.**
 
-- [ ] The Actions run shows four green jobs and the log prints `Flutter 3.47.9`.
+- [x] The Actions run shows four green jobs and the log prints `Flutter 3.47.9`.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/widget_test.dart` still passes. Run `fvm flutter analyze && fvm flutter test`.
+- [x] `test/widget_test.dart` still passes. Run `fvm flutter analyze && fvm flutter test`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -120,7 +120,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Add dev, stage and prod flavors on both platforms (CS-01)
 
@@ -128,26 +128,26 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Edit `android/app/build.gradle.kts`.
-- [ ] Edit `ios/Runner.xcodeproj/project.pbxproj`.
-- [ ] Create `ios/Flutter/Debug-dev.xcconfig` and the other eight flavor configs.
-- [ ] Create `ios/Runner.xcodeproj/xcshareddata/xcschemes/dev.xcscheme`, `stage.xcscheme`, `prod.xcscheme`.
-- [ ] Edit `ios/Podfile` so all nine configs map to debug or release.
-- [ ] Create `config/dev.json`, `config/stage.json`, `config/prod.json`.
-- [ ] Create `lib/core/config/app_config.dart`.
+- [x] Edit `android/app/build.gradle.kts`.
+- [x] Edit `ios/Runner.xcodeproj/project.pbxproj`.
+- [x] Create `ios/Flutter/Debug-dev.xcconfig` and the other eight flavor configs.
+- [x] Create `ios/Runner.xcodeproj/xcshareddata/xcschemes/dev.xcscheme`, `stage.xcscheme`, `prod.xcscheme`.
+- [x] Edit `ios/Podfile` so all nine configs map to debug or release.
+- [x] Create `config/dev.json`, `config/stage.json`, `config/prod.json`.
+- [x] Create `lib/core/config/app_config.dart`.
 
 **Build.**
 
-- [ ] `productFlavors` dev, stage and prod with `applicationIdSuffix` `.dev` and `.stage` and an `app_name` resValue per flavor.
-- [ ] `AppConfig` reads `APP_FLAVOR`, `API_BASE_URL` and `CERT_SHA256` from `--dart-define-from-file`, replacing `flutter_dotenv` and the bundled `.env` asset.
+- [x] `productFlavors` dev, stage and prod with `applicationIdSuffix` `.dev` and `.stage` and an `app_name` resValue per flavor.
+- [x] `AppConfig` reads `APP_FLAVOR`, `API_BASE_URL` and `CERT_SHA256` from `--dart-define-from-file`, replacing `flutter_dotenv` and the bundled `.env` asset.
 
 **You see.**
 
-- [ ] The launcher shows Corestone Dev, Corestone Stage and Corestone.
+- [x] The launcher shows Corestone Dev, Corestone Stage and Corestone.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/core/config/app_config_test.dart` covers each flavor and the missing-key error. Run `fvm flutter test test/core/config`.
+- [x] `test/core/config/app_config_test.dart` covers each flavor and the missing-key error. Run `fvm flutter test test/core/config`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -176,7 +176,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Port the core architecture shell with BLoC, GetIt and AutoRoute (CS-02)
 
@@ -184,28 +184,28 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/bootstrap.dart`.
-- [ ] Create `lib/core/di/injection.dart`.
-- [ ] Create `lib/core/router/app_router.dart`.
-- [ ] Create `lib/core/errors/failure.dart` and `exceptions.dart` from `skelter/lib/core/errors`.
-- [ ] Create `lib/core/usecase/usecase.dart` and `lib/core/typedef.dart`.
-- [ ] Create `lib/core/storage/prefs.dart` from `skelter/lib/shared_pref`.
-- [ ] Create `lib/features/home/home_shell.dart`.
-- [ ] Create `test/flutter_test_config.dart` and `dart_test.yaml`.
-- [ ] Edit `pubspec.yaml`.
+- [x] Create `lib/bootstrap.dart`.
+- [x] Create `lib/core/di/injection.dart`.
+- [x] Create `lib/core/router/app_router.dart`.
+- [x] Create `lib/core/errors/failure.dart` and `exceptions.dart` from `skelter/lib/core/errors`.
+- [x] Create `lib/core/usecase/usecase.dart` and `lib/core/typedef.dart`.
+- [x] Create `lib/core/storage/prefs.dart` from `skelter/lib/shared_pref`.
+- [x] Create `lib/features/home/home_shell.dart`.
+- [x] Create `test/flutter_test_config.dart` and `dart_test.yaml`.
+- [x] Edit `pubspec.yaml`.
 
 **Build.**
 
-- [ ] `bootstrap()` runs `runZonedGuarded`, `Prefs.init()` and `configureDependencies()` before `runApp`, so DI never imports `main.dart`.
-- [ ] `HomeShell` is an AutoRoute tabs route with a placeholder Home tab and a Settings tab.
+- [x] `bootstrap()` runs `runZonedGuarded`, `Prefs.init()` and `configureDependencies()` before `runApp`, so DI never imports `main.dart`.
+- [x] `HomeShell` is an AutoRoute tabs route with a placeholder Home tab and a Settings tab.
 
 **You see.**
 
-- [ ] The app opens on the Home tab and switches to Settings.
+- [x] The app opens on the Home tab and switches to Settings.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/core/di/injection_test.dart` resolves every registration. `test/core/router/app_router_test.dart` pushes each route. Run `fvm flutter test`.
+- [x] `test/core/di/injection_test.dart` resolves every registration. `test/core/router/app_router_test.dart` pushes each route. Run `fvm flutter test`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -238,7 +238,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Refactor the theme into a Material 3 design system (CS-03)
 
@@ -246,27 +246,27 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/core/theme/app_colors.dart` as a `ThemeExtension`.
-- [ ] Create `lib/core/theme/app_theme.dart`.
-- [ ] Create `lib/core/theme/app_text_styles.dart`.
-- [ ] Create `lib/core/theme/theme_cubit.dart`.
-- [ ] Create `lib/core/widgets/app_button.dart` and `lib/core/widgets/shimmer_box.dart`.
-- [ ] Create `lib/features/settings/change_theme_screen.dart`.
-- [ ] Create `assets/fonts/Inter/` with the weights mapped correctly.
-- [ ] Edit `pubspec.yaml`.
+- [x] Create `lib/core/theme/app_colors.dart` as a `ThemeExtension`.
+- [x] Create `lib/core/theme/app_theme.dart`.
+- [x] Create `lib/core/theme/app_text_styles.dart`.
+- [x] Create `lib/core/theme/theme_cubit.dart`.
+- [x] Create `lib/core/widgets/app_button.dart` and `lib/core/widgets/shimmer_box.dart`.
+- [x] Create `lib/features/settings/change_theme_screen.dart`.
+- [x] Create `assets/fonts/Inter/` with the weights mapped correctly.
+- [x] Edit `pubspec.yaml`.
 
 **Build.**
 
-- [ ] `AppTheme.light` and `AppTheme.dark` build a Material 3 `ColorScheme` from one seed plus the `AppColors` extension, so Material widgets pick up brand colors.
-- [ ] `ThemeCubit` persists system, light or dark in `Prefs`.
+- [x] `AppTheme.light` and `AppTheme.dark` build a Material 3 `ColorScheme` from one seed plus the `AppColors` extension, so Material widgets pick up brand colors.
+- [x] `ThemeCubit` persists system, light or dark in `Prefs`.
 
 **You see.**
 
-- [ ] Settings then Theme switches light, dark and system live.
+- [x] Settings then Theme switches light, dark and system live.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/core/theme/theme_cubit_test.dart` persists the choice. `test/core/widgets/app_button_golden_test.dart` renders every variant in light and dark. Run `fvm flutter test --tags golden`.
+- [x] `test/core/theme/theme_cubit_test.dart` persists the choice. `test/core/widgets/app_button_golden_test.dart` renders every variant in light and dark. Run `fvm flutter test --tags golden`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -299,7 +299,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Keep localization and add Thai (CS-04)
 
@@ -307,25 +307,25 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `l10n.yaml`.
-- [ ] Create `lib/l10n/app_en.arb` with only the keys the kept screens use.
-- [ ] Create `lib/l10n/app_th.arb`.
-- [ ] Create `lib/core/locale/locale_cubit.dart`.
-- [ ] Create `assets/fonts/NotoSansThai/`.
-- [ ] Edit `lib/features/settings/settings_screen.dart`.
+- [x] Create `l10n.yaml`.
+- [x] Create `lib/l10n/app_en.arb` with only the keys the kept screens use.
+- [x] Create `lib/l10n/app_th.arb`.
+- [x] Create `lib/core/locale/locale_cubit.dart`.
+- [x] Create `assets/fonts/NotoSansThai/`.
+- [x] Edit `lib/features/settings/settings_screen.dart`.
 
 **Build.**
 
-- [ ] `LocaleCubit` persists English, Thai or system and feeds `MaterialApp.router(locale:)`.
-- [ ] `AppTextStyles` sets `fontFamilyFallback` to Noto Sans Thai, because Inter has no Thai glyphs.
+- [x] `LocaleCubit` persists English, Thai or system and feeds `MaterialApp.router(locale:)`.
+- [x] `AppTextStyles` sets `fontFamilyFallback` to Noto Sans Thai, because Inter has no Thai glyphs.
 
 **You see.**
 
-- [ ] Settings then Language switches every visible string to Thai.
+- [x] Settings then Language switches every visible string to Thai.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `l10n.yaml` sets `untranslated-messages-file` and `test/l10n/untranslated_test.dart` fails when it lists any key. Settings golden in `th`. Run `fvm flutter test`.
+- [x] `l10n.yaml` sets `untranslated-messages-file` and `test/l10n/untranslated_test.dart` fails when it lists any key. Settings golden in `th`. Run `fvm flutter test`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -358,7 +358,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Replace sizer with breakpoint-based responsive layout (CS-05)
 
@@ -366,22 +366,22 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/core/layout/breakpoints.dart`.
-- [ ] Create `lib/core/layout/adaptive_scaffold.dart`.
-- [ ] Edit `lib/features/home/home_shell.dart`.
+- [x] Create `lib/core/layout/breakpoints.dart`.
+- [x] Create `lib/core/layout/adaptive_scaffold.dart`.
+- [x] Edit `lib/features/home/home_shell.dart`.
 
 **Build.**
 
-- [ ] `WindowSize.of(context)` returns compact below 600, medium below 840 and expanded above, from `MediaQuery.sizeOf`.
-- [ ] `AdaptiveScaffold` shows a bottom `NavigationBar` when compact and a `NavigationRail` otherwise.
+- [x] `WindowSize.of(context)` returns compact below 600, medium below 840 and expanded above, from `MediaQuery.sizeOf`.
+- [x] `AdaptiveScaffold` shows a bottom `NavigationBar` when compact and a `NavigationRail` otherwise.
 
 **You see.**
 
-- [ ] A tablet emulator shows a side rail. A phone shows a bottom bar.
+- [x] A tablet emulator shows a side rail. A phone shows a bottom bar.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/core/layout/adaptive_scaffold_golden_test.dart` renders 360, 700 and 1024 wide. Run `fvm flutter test --tags golden`.
+- [x] `test/core/layout/adaptive_scaffold_golden_test.dart` renders 360, 700 and 1024 wide. Run `fvm flutter test --tags golden`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -414,7 +414,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Refactor the Dio API layer into one ApiClient with a mock server (CS-06)
 
@@ -422,25 +422,25 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/core/network/api_client.dart`.
-- [ ] Create `lib/core/network/error_mapper.dart`.
-- [ ] Create `lib/core/network/pinning.dart`.
-- [ ] Create `tool/mock_api/server.dart`.
-- [ ] Edit `lib/core/di/injection.dart`.
+- [x] Create `lib/core/network/api_client.dart`.
+- [x] Create `lib/core/network/error_mapper.dart`.
+- [x] Create `lib/core/network/pinning.dart`.
+- [x] Create `tool/mock_api/server.dart`.
+- [x] Edit `lib/core/di/injection.dart`.
 
 **Build.**
 
-- [ ] `ApiClient` owns one `Dio` with timeouts from `AppConfig`, optional pinning against a list of SHA-256 pins, and opt-in caching per call instead of `forceCache` by default.
-- [ ] `mapDioError` turns every `DioException` into a typed `Failure`.
-- [ ] `tool/mock_api/server.dart` is a `dart:io` server for `/auth/login`, `/auth/refresh`, `/me` and `/devices`.
+- [x] `ApiClient` owns one `Dio` with timeouts from `AppConfig`, optional pinning against a list of SHA-256 pins, and opt-in caching per call instead of `forceCache` by default.
+- [x] `mapDioError` turns every `DioException` into a typed `Failure`.
+- [x] `tool/mock_api/server.dart` is a `dart:io` server for `/auth/login`, `/auth/refresh`, `/me` and `/devices`.
 
 **You see.**
 
-- [ ] `dart run tool/mock_api/server.dart` prints its port, and the dev flavor on the emulator reaches it at `10.0.2.2`.
+- [x] `dart run tool/mock_api/server.dart` prints its port, and the dev flavor on the emulator reaches it at `10.0.2.2`.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/core/network/api_client_test.dart` covers timeout, 401, 500, bad JSON and pin mismatch with a fake `HttpClientAdapter`. Run `fvm flutter test test/core/network`.
+- [x] `test/core/network/api_client_test.dart` covers timeout, 401, 500, bad JSON and pin mismatch with a fake `HttpClientAdapter`. Run `fvm flutter test test/core/network`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -469,7 +469,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Move the session into secure storage with token refresh (CS-07)
 
@@ -477,27 +477,27 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/core/storage/secure_store.dart`.
-- [ ] Create `lib/features/auth/data/token_store.dart`.
-- [ ] Create `lib/features/auth/domain/auth_repository.dart`.
-- [ ] Create `lib/features/auth/data/rest_auth_repository.dart` and `fake_auth_repository.dart`.
-- [ ] Create `lib/features/auth/session_cubit.dart`.
-- [ ] Create `lib/core/network/auth_interceptor.dart`.
-- [ ] Create `lib/core/router/auth_guard.dart`.
+- [x] Create `lib/core/storage/secure_store.dart`.
+- [x] Create `lib/features/auth/data/token_store.dart`.
+- [x] Create `lib/features/auth/domain/auth_repository.dart`.
+- [x] Create `lib/features/auth/data/rest_auth_repository.dart` and `fake_auth_repository.dart`.
+- [x] Create `lib/features/auth/session_cubit.dart`.
+- [x] Create `lib/core/network/auth_interceptor.dart`.
+- [x] Create `lib/core/router/auth_guard.dart`.
 
 **Build.**
 
-- [ ] `SessionState` is a sealed class with `unknown`, `authenticated` and `unauthenticated`.
-- [ ] `AuthInterceptor` is a `QueuedInterceptor` that attaches the access token and runs one refresh for any number of concurrent 401s, then logs out when refresh fails.
-- [ ] Logout clears `SecureStore` only, so theme and language survive.
+- [x] `SessionState` is a sealed class with `unknown`, `authenticated` and `unauthenticated`.
+- [x] `AuthInterceptor` is a `QueuedInterceptor` that attaches the access token and runs one refresh for any number of concurrent 401s, then logs out when refresh fails.
+- [x] Logout clears `SecureStore` only, so theme and language survive.
 
 **You see.**
 
-- [ ] Killing the app while signed in reopens signed in, and an expired token refreshes without a visible error.
+- [x] Killing the app while signed in reopens signed in, and an expired token refreshes without a visible error.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/core/network/auth_interceptor_test.dart` sends five concurrent 401s and asserts one refresh call. `test/features/auth/session_cubit_test.dart` covers logout keeping prefs. Run `fvm flutter test`.
+- [x] `test/core/network/auth_interceptor_test.dart` sends five concurrent 401s and asserts one refresh call. `test/features/auth/session_cubit_test.dart` covers logout keeping prefs. Run `fvm flutter test`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -526,7 +526,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Refactor login, logout and account deletion onto the REST session (CS-08)
 
@@ -534,21 +534,21 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/features/auth/presentation/login_screen.dart`.
+- [x] Create `lib/features/auth/presentation/login_screen.dart`.
 - [ ] Create `lib/features/auth/presentation/login_bloc.dart`.
-- [ ] Create `lib/features/settings/delete_account_screen.dart`.
-- [ ] Edit `lib/features/settings/settings_screen.dart`.
-- [ ] Edit `lib/l10n/app_en.arb` and `app_th.arb`.
+- [x] Create `lib/features/settings/delete_account_screen.dart`.
+- [x] Edit `lib/features/settings/settings_screen.dart`.
+- [x] Edit `lib/l10n/app_en.arb` and `app_th.arb`.
 
 **Build.**
 
-- [ ] Email and password login through `AuthRepository`, with the field validators ported from `skelter/lib/validators`.
-- [ ] Delete account calls `DELETE /me`, then logs out, because both stores require in-app deletion.
-- [ ] `DEMO_MODE=true` on dev binds `FakeAuthRepository`, so the template runs with no backend.
+- [x] Email and password login through `AuthRepository`, with the field validators ported from `skelter/lib/validators`.
+- [x] Delete account calls `DELETE /me`, then logs out, because both stores require in-app deletion.
+- [x] `DEMO_MODE=true` on dev binds `FakeAuthRepository`, so the template runs with no backend.
 
 **You see.**
 
-- [ ] Login, logout and delete account work against the mock server and in demo mode.
+- [x] Login, logout and delete account work against the mock server and in demo mode.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
@@ -585,7 +585,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Add the app PIN lock (CS-09)
 
@@ -593,26 +593,26 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/features/app_lock/pin_repository.dart`.
-- [ ] Create `lib/features/app_lock/app_lock_cubit.dart`.
-- [ ] Create `lib/features/app_lock/lock_screen.dart`.
-- [ ] Create `lib/features/app_lock/set_pin_screen.dart`.
-- [ ] Edit `lib/core/router/app_router.dart`.
-- [ ] Edit `pubspec.yaml` to add `cryptography`.
+- [x] Create `lib/features/app_lock/pin_repository.dart`.
+- [x] Create `lib/features/app_lock/app_lock_cubit.dart`.
+- [x] Create `lib/features/app_lock/lock_screen.dart`.
+- [x] Create `lib/features/app_lock/set_pin_screen.dart`.
+- [x] Edit `lib/core/router/app_router.dart`.
+- [x] Edit `pubspec.yaml` to add `cryptography`.
 
 **Build.**
 
-- [ ] `PinRepository` stores a salted PBKDF2 hash in `SecureStore`, never the PIN.
-- [ ] `AppLockState` is a sealed class with `noPin`, `locked`, `unlocked` and `lockedOut`.
-- [ ] `AppLifecycleListener` locks after 30 seconds in background, and five wrong PINs log the user out.
+- [x] `PinRepository` stores a salted PBKDF2 hash in `SecureStore`, never the PIN.
+- [x] `AppLockState` is a sealed class with `noPin`, `locked`, `unlocked` and `lockedOut`.
+- [x] `AppLifecycleListener` locks after 30 seconds in background, and five wrong PINs log the user out.
 
 **You see.**
 
-- [ ] After sign in the user sets a six digit PIN, and every cold start or long background shows the lock screen.
+- [x] After sign in the user sets a six digit PIN, and every cold start or long background shows the lock screen.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/features/app_lock/app_lock_cubit_test.dart` uses a fake clock for the 30 second rule and the five-failure logout. `test/features/app_lock/pin_repository_test.dart` asserts the stored value differs from the PIN. Run `fvm flutter test`.
+- [x] `test/features/app_lock/app_lock_cubit_test.dart` uses a fake clock for the 30 second rule and the five-failure logout. `test/features/app_lock/pin_repository_test.dart` asserts the stored value differs from the PIN. Run `fvm flutter test`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -645,7 +645,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Refactor biometrics into a shortcut on the lock screen (CS-10)
 
@@ -653,23 +653,23 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/features/app_lock/biometric_service.dart` from `skelter/lib/services/local_auth_services.dart`.
-- [ ] Edit `lib/features/app_lock/lock_screen.dart`.
-- [ ] Edit `android/app/src/main/kotlin/com/wutstack/corestone/MainActivity.kt` to extend `FlutterFragmentActivity`.
-- [ ] Edit `ios/Runner/Info.plist` to add `NSFaceIDUsageDescription`.
-- [ ] Edit `lib/features/settings/settings_screen.dart`.
+- [x] Create `lib/features/app_lock/biometric_service.dart` from `skelter/lib/services/local_auth_services.dart`.
+- [x] Edit `lib/features/app_lock/lock_screen.dart`.
+- [x] Edit `android/app/src/main/kotlin/com/wutstack/corestone/MainActivity.kt` to extend `FlutterFragmentActivity`.
+- [x] Edit `ios/Runner/Info.plist` to add `NSFaceIDUsageDescription`.
+- [x] Edit `lib/features/settings/settings_screen.dart`.
 
 **Build.**
 
-- [ ] Biometric success unlocks the lock. Failure or cancel falls back to the PIN pad and never exits the app.
+- [x] Biometric success unlocks the lock. Failure or cancel falls back to the PIN pad and never exits the app.
 
 **You see.**
 
-- [ ] With biometrics on, the lock screen prompts for a fingerprint and shows the PIN pad behind it.
+- [x] With biometrics on, the lock screen prompts for a fingerprint and shows the PIN pad behind it.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/features/app_lock/biometric_unlock_test.dart` covers success, cancel and not enrolled with a fake `LocalAuthentication`. Run `fvm flutter test`.
+- [x] `test/features/app_lock/biometric_unlock_test.dart` covers success, cancel and not enrolled with a fake `LocalAuthentication`. Run `fvm flutter test`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -702,7 +702,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Keep FCM on an optional Firebase core (CS-11)
 
@@ -710,25 +710,25 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Edit `android/settings.gradle.kts` and `android/app/build.gradle.kts` for the google-services plugin.
-- [ ] Edit `ios/Runner.xcodeproj/project.pbxproj` with a build phase that copies `ios/config/<flavor>/GoogleService-Info.plist`.
-- [ ] Create `ios/Runner/Runner.entitlements` with `aps-environment`.
-- [ ] Create `lib/core/push/push_service.dart`.
-- [ ] Create `tool/firebase_config.sh`.
+- [x] Edit `android/settings.gradle.kts` and `android/app/build.gradle.kts` for the google-services plugin.
+- [x] Edit `ios/Runner.xcodeproj/project.pbxproj` with a build phase that copies `ios/config/<flavor>/GoogleService-Info.plist`.
+- [x] Create `ios/Runner/Runner.entitlements` with `aps-environment`.
+- [x] Create `lib/core/push/push_service.dart`.
+- [x] Create `tool/firebase_config.sh`.
 - [ ] Edit `pubspec.yaml` to add `firebase_core`, `firebase_messaging` and `awesome_notifications`.
 
 **Build.**
 
-- [ ] `PushService` initializes Firebase only when the flavor has options, asks permission, shows foreground messages and registers the token with `POST /devices` after sign in and `DELETE /devices` on logout.
-- [ ] No other Firebase product is added.
+- [x] `PushService` initializes Firebase only when the flavor has options, asks permission, shows foreground messages and registers the token with `POST /devices` after sign in and `DELETE /devices` on logout.
+- [x] No other Firebase product is added.
 
 **You see.**
 
-- [ ] A test message from the Firebase console shows on the device in foreground and background.
+- [x] A test message from the Firebase console shows on the device in foreground and background.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/core/push/push_service_test.dart` covers token registration on sign in and removal on logout with a fake messaging. Run `fvm flutter test`.
+- [x] `test/core/push/push_service_test.dart` covers token registration on sign in and removal on logout with a fake messaging. Run `fvm flutter test`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -761,7 +761,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Port the system screens and the connectivity banner (CS-12)
 
@@ -769,21 +769,21 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/features/system/no_internet_screen.dart`, `server_error_screen.dart`, `maintenance_screen.dart`, `ssl_failed_screen.dart` from `skelter/lib/presentation`.
-- [ ] Create `lib/core/network/connectivity_banner.dart`.
-- [ ] Edit `lib/core/network/error_mapper.dart`.
+- [x] Create `lib/features/system/no_internet_screen.dart`, `server_error_screen.dart`, `maintenance_screen.dart`, `ssl_failed_screen.dart` from `skelter/lib/presentation`.
+- [x] Create `lib/core/network/connectivity_banner.dart`.
+- [x] Edit `lib/core/network/error_mapper.dart`.
 
 **Build.**
 
-- [ ] Mapped failures route to the matching system screen, and `connectivity_plus` drives a banner instead of pushing a route.
+- [x] Mapped failures route to the matching system screen, and `connectivity_plus` drives a banner instead of pushing a route.
 
 **You see.**
 
-- [ ] Airplane mode shows the offline banner, and a 503 from the mock server shows the maintenance screen.
+- [x] Airplane mode shows the offline banner, and a 503 from the mock server shows the maintenance screen.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Goldens for each system screen in `en` and `th`. Run `fvm flutter test --tags golden`.
+- [x] Goldens for each system screen in `en` and `th`. Run `fvm flutter test --tags golden`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -816,7 +816,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Keep deep links behind the session and the lock (CS-16)
 
@@ -824,24 +824,24 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `lib/core/deep_link/deep_link_service.dart` from `skelter/lib/core/deep_link/app_deep_link_manager.dart` without the product routes.
-- [ ] Create `lib/core/deep_link/deep_link_routes.dart`.
-- [ ] Edit `android/app/src/main/AndroidManifest.xml` with an App Links intent filter whose host comes from a `deepLinkHost` manifest placeholder per flavor.
-- [ ] Edit `ios/Runner/Runner.entitlements` with `applinks:$(DEEP_LINK_HOST)`.
-- [ ] Edit `config/dev.json`, `stage.json`, `prod.json` with `DEEP_LINK_HOST`.
+- [x] Create `lib/core/deep_link/deep_link_service.dart` from `skelter/lib/core/deep_link/app_deep_link_manager.dart` without the product routes.
+- [x] Create `lib/core/deep_link/deep_link_routes.dart`.
+- [x] Edit `android/app/src/main/AndroidManifest.xml` with an App Links intent filter whose host comes from a `deepLinkHost` manifest placeholder per flavor.
+- [x] Edit `ios/Runner/Runner.entitlements` with `applinks:$(DEEP_LINK_HOST)`.
+- [x] Edit `config/dev.json`, `stage.json`, `prod.json` with `DEEP_LINK_HOST`.
 
 **Build.**
 
-- [ ] `DeepLinkTarget` is a sealed class parsed from a `Uri` at the boundary, and an unknown path parses to `DeepLinkTarget.unknown` instead of throwing.
-- [ ] A link that arrives signed out or locked is held and replayed after sign in and unlock.
+- [x] `DeepLinkTarget` is a sealed class parsed from a `Uri` at the boundary, and an unknown path parses to `DeepLinkTarget.unknown` instead of throwing.
+- [x] A link that arrives signed out or locked is held and replayed after sign in and unlock.
 
 **You see.**
 
-- [ ] `adb shell am start -d https://<host>/settings` opens Settings, after the lock screen when locked.
+- [x] `adb shell am start -d https://<host>/settings` opens Settings, after the lock screen when locked.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `test/core/deep_link/deep_link_target_test.dart` parses every known path and rejects unknown ones. `test/core/deep_link/pending_link_test.dart` replays a held link after unlock. Run `fvm flutter test test/core/deep_link`.
+- [x] `test/core/deep_link/deep_link_target_test.dart` parses every known path and rejects unknown ones. `test/core/deep_link/pending_link_test.dart` replays a held link after unlock. Run `fvm flutter test test/core/deep_link`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -874,7 +874,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Keep feedback on the REST API instead of Firestore (CS-17)
 
@@ -883,19 +883,19 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 **Files.**
 
 - [ ] Create `lib/features/feedback/feedback_screen.dart` and `feedback_bloc.dart` from `skelter/lib/presentation/feedback`.
-- [ ] Create `lib/features/feedback/data/feedback_repository.dart`.
-- [ ] Edit `tool/mock_api/server.dart` to accept `POST /feedback`.
-- [ ] Edit `lib/features/settings/settings_screen.dart`.
-- [ ] Edit `lib/l10n/app_en.arb` and `app_th.arb`.
+- [x] Create `lib/features/feedback/data/feedback_repository.dart`.
+- [x] Edit `tool/mock_api/server.dart` to accept `POST /feedback`.
+- [x] Edit `lib/features/settings/settings_screen.dart`.
+- [x] Edit `lib/l10n/app_en.arb` and `app_th.arb`.
 
 **Build.**
 
-- [ ] `FeedbackRepository.send` posts the rating, text and app version with `POST /feedback` through `ApiClient`. No Firestore code is ported.
-- [ ] `FeedbackState` is a sealed class with `editing`, `sending`, `sent` and `failed`.
+- [x] `FeedbackRepository.send` posts the rating, text and app version with `POST /feedback` through `ApiClient`. No Firestore code is ported.
+- [x] `FeedbackState` is a sealed class with `editing`, `sending`, `sent` and `failed`.
 
 **You see.**
 
-- [ ] Settings then Feedback sends a rating and text, and the mock server logs the body.
+- [x] Settings then Feedback sends a rating and text, and the mock server logs the body.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
@@ -932,7 +932,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Adapt the integration tests to Patrol on the new flows (CS-13)
 
@@ -940,23 +940,23 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Edit `pubspec.yaml` with the `patrol` block for `com.wutstack.corestone.dev`.
-- [ ] Edit `android/app/build.gradle.kts` for the Patrol runner and orchestrator.
-- [ ] Create `android/app/src/androidTest/java/com/wutstack/corestone/MainActivityTest.java`.
-- [ ] Create `integration_test/app_test.dart`.
+- [x] Edit `pubspec.yaml` with the `patrol` block for `com.wutstack.corestone.dev`.
+- [x] Edit `android/app/build.gradle.kts` for the Patrol runner and orchestrator.
+- [x] Create `android/app/src/androidTest/java/com/wutstack/corestone/MainActivityTest.java`.
+- [x] Create `integration_test/app_test.dart`.
 - [ ] Edit `.github/workflows/ci.yml` to add an emulator job.
 
 **Build.**
 
-- [ ] `app_test.dart` runs sign in, set PIN, background, unlock and logout against the mock server.
+- [x] `app_test.dart` runs sign in, set PIN, background, unlock and logout against the mock server.
 
 **You see.**
 
-- [ ] The emulator job in CI runs the Patrol suite green.
+- [x] The emulator job in CI runs the Patrol suite green.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] The Patrol suite is the test. Run `patrol test --target integration_test/app_test.dart --flavor dev`.
+- [x] The Patrol suite is the test. Run `patrol test --target integration_test/app_test.dart --flavor dev`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -985,7 +985,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Build the template generator (CS-14)
 
@@ -993,22 +993,22 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Create `tool/new_project.dart`.
-- [ ] Create `test/tool/new_project_test.dart`.
-- [ ] Create `TEMPLATE.md`.
+- [x] Create `tool/new_project.dart`.
+- [x] Create `test/tool/new_project_test.dart`.
+- [x] Create `TEMPLATE.md`.
 
 **Build.**
 
-- [ ] `dart run tool/new_project.dart --name acme_app --org com.acme --display-name Acme` rewrites the pubspec name, every `package:corestone/` import, the Android namespace and `applicationId`, the Kotlin package directory, every iOS `PRODUCT_BUNDLE_IDENTIFIER`, the display names and the Patrol ids.
-- [ ] It refuses a dirty tree and running it twice changes nothing.
+- [x] `dart run tool/new_project.dart --name acme_app --org com.acme --display-name Acme` rewrites the pubspec name, every `package:corestone/` import, the Android namespace and `applicationId`, the Kotlin package directory, every iOS `PRODUCT_BUNDLE_IDENTIFIER`, the display names and the Patrol ids.
+- [x] It refuses a dirty tree and running it twice changes nothing.
 
 **You see.**
 
-- [ ] A fresh copy renamed to `acme_app` has no `corestone` string outside `NOTICE` and `TEMPLATE.md`.
+- [x] A fresh copy renamed to `acme_app` has no `corestone` string outside `NOTICE` and `TEMPLATE.md`.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `new_project_test.dart` renames a temp copy, greps for leftovers and reruns to assert no diff. Run `fvm dart test test/tool`.
+- [x] `new_project_test.dart` renames a temp copy, greps for leftovers and reruns to assert no diff. Run `fvm dart test test/tool`.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
@@ -1037,7 +1037,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Add App Distribution, release signing and the template smoke job (CS-15)
 
@@ -1047,25 +1047,25 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Files.**
 
-- [ ] Edit `android/app/build.gradle.kts` to read `key.properties` for release signing, falling back to the debug key with a Gradle warning.
-- [ ] Create `.github/workflows/distribute.yml`, `workflow_dispatch` only, disabled with `gh workflow disable` after merge.
-- [ ] Create `tool/template_smoke.sh`.
-- [ ] Edit `tool/new_project.dart` to run `dart pub get` and the `directives_ordering` fix after renaming, and to remove `tool/template_smoke.sh` from a generated app.
-- [ ] Edit `TEMPLATE.md` with release signing, the secret names and the done check.
+- [x] Edit `android/app/build.gradle.kts` to read `key.properties` for release signing, falling back to the debug key with a Gradle warning.
+- [x] Create `.github/workflows/distribute.yml`, `workflow_dispatch` only, disabled with `gh workflow disable` after merge.
+- [x] Create `tool/template_smoke.sh`.
+- [x] Edit `tool/new_project.dart` to run `dart pub get` and the `directives_ordering` fix after renaming, and to remove `tool/template_smoke.sh` from a generated app.
+- [x] Edit `TEMPLATE.md` with release signing, the secret names and the done check.
 
 **Build.**
 
-- [ ] `distribute-android` builds a signed release APK for the chosen flavor and uploads it with `firebase appdistribution:distribute` using a service account secret and a tester group input.
-- [ ] `tool/template_smoke.sh` generates `acme_app` into a temp copy, checks no template identity is left, then runs `pub get`, `analyze`, `test`, a debug dev APK build and a release prod APK build.
+- [x] `distribute-android` builds a signed release APK for the chosen flavor and uploads it with `firebase appdistribution:distribute` using a service account secret and a tester group input.
+- [x] `tool/template_smoke.sh` generates `acme_app` into a temp copy, checks no template identity is left, then runs `pub get`, `analyze`, `test`, a debug dev APK build and a release prod APK build.
 
 **You see.**
 
-- [ ] `tool/template_smoke.sh` prints PASS with per-step timings, and FAIL with a non-zero exit when a step breaks.
+- [x] `tool/template_smoke.sh` prints PASS with per-step timings, and FAIL with a non-zero exit when a step breaks.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `tool/template_smoke.sh` is the done check. Run it locally and read every step.
-- [ ] `apksigner verify --print-certs` on the prod release APK shows the `key.properties` key when the file is present and the debug key when it is absent.
+- [x] `tool/template_smoke.sh` is the done check. Run it locally and read every step.
+- [x] `apksigner verify --print-certs` on the prod release APK shows the `key.properties` key when the file is present and the debug key when it is absent.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe. Lanes 1, 2, 4 and 7 are deferred, because distribution stays disabled and iOS is unverified.
 
@@ -1094,7 +1094,7 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 - [ ] Root's clean verdict at the exact head SHA.
 - [ ] Review comment triage done.
 - [ ] Rebased onto current trunk after the verdict, patch-id unchanged.
-- [ ] The root appends it to the stack, and the operator lands it bottom-up.
+- [x] The root appends it to the stack, and the operator lands it bottom-up.
 
 ## Close the program
 
@@ -1213,5 +1213,12 @@ Changes from this plan, in order of impact.
 - The template-smoke CI job became the local script `tool/template_smoke.sh`.
 - Stacked PRs caused two merge mistakes, a stale base on #2 and the accidental revert in #8. After #9 the program branched each PR from main.
 - Lanes moved from Pixel_5 to Pixel_10_Pro after a biometric lane locked Pixel_5.
+
+How the boxes were checked on 2026-11-05.
+
+- A box is checked only when its evidence exists in a merged PR body, a local test run or a saved lane screenshot.
+- In each PR section, Files, Build, You see, Verify unit and the operator-lands Merge box are checked, except where the code differs from the plan text. Those stay unchecked. Examples are `login_bloc` and `feedback_bloc`, which became cubits, `awesome_notifications`, which became `flutter_local_notifications`, and every CI job.
+- Verify live, Verify perf and Review gate stay unchecked. Each PR ran its own smaller set of emulator lanes, listed in its PR body, not the ten swarm lanes, the perf probe or the `spec/media` copies this plan asks for.
+- The swarm verdict, Bugbot triage and patch-id boxes stay unchecked, because none of those ran.
 
 `spec/decisions.md` holds the decisions and `spec/open-items.md` the unfinished and unproven items.
