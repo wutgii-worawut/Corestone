@@ -1,5 +1,6 @@
 import 'package:corestone/core/config/app_config.dart';
 import 'package:corestone/core/di/injection.dart';
+import 'package:corestone/core/network/api_client.dart';
 import 'package:corestone/core/router/app_router.dart';
 import 'package:corestone/core/storage/prefs.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,7 +10,7 @@ import 'package:shared_preferences_platform_interface/shared_preferences_async_p
 const testConfig = AppConfig(
   flavor: AppFlavor.dev,
   apiBaseUrl: 'https://api-dev.example.com',
-  certSha256: '',
+  certPins: [],
 );
 
 void main() {
@@ -25,6 +26,7 @@ void main() {
 
     expect(sl<AppConfig>(), same(testConfig));
     expect(sl<AppRouter>(), isA<AppRouter>());
+    expect(sl<ApiClient>(), isA<ApiClient>());
 
     final prefs = sl<Prefs>();
     await prefs.setString('k', 'v');

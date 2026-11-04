@@ -17,7 +17,7 @@ void main() {
       const AppConfig(
         flavor: AppFlavor.stage,
         apiBaseUrl: 'https://api-stage.example.com',
-        certSha256: '',
+        certPins: [],
       ),
     );
   });

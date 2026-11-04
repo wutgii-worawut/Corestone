@@ -3,3 +3,5 @@ tags:
     description: "Marks golden tests for visual comparison"
   widgetTest:
     description: "Marks basic widget tests"
+  perf:
+    description: "Benchmarks. Fast enough to stay in the default run."
