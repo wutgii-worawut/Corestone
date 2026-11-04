@@ -1,9 +1,11 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:corestone/core/config/app_config.dart';
 import 'package:corestone/core/locale/locale_cubit.dart';
 import 'package:corestone/core/network/api_client.dart';
 import 'package:corestone/core/network/auth_interceptor.dart';
+import 'package:corestone/core/network/connectivity_cubit.dart';
 import 'package:corestone/core/push/firebase_push_messaging.dart';
 import 'package:corestone/core/push/push_service.dart';
 import 'package:corestone/core/router/app_router.dart';
@@ -22,18 +24,20 @@ import 'package:corestone/features/auth/data/token_store.dart';
 import 'package:corestone/features/auth/domain/account_repository.dart';
 import 'package:corestone/features/auth/domain/auth_repository.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
+import 'package:corestone/features/system/system_pages.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
 /// [pins] lets tests swap in a cheaper hash, [biometrics] a fake sensor,
-/// [messaging] a fake push layer.
+/// [messaging] a fake push layer, [connectivity] a fake network state.
 void configureDependencies(
   AppConfig config, {
   PinRepository? pins,
   BiometricService? biometrics,
   PushMessaging? messaging,
+  Stream<List<ConnectivityResult>>? connectivity,
 }) {
   // Auth calls and retries skip the auth interceptor, so a 401 on refresh
   // cannot trigger another refresh.
@@ -97,5 +101,10 @@ void configureDependencies(
       AppLockCubit(sl(), sl(), biometrics ?? BiometricService()),
       dispose: (cubit) => cubit.close(),
     )
-    ..registerSingleton<AppRouter>(AppRouter(AuthGuard(sl())));
+    ..registerSingleton<AppRouter>(AppRouter(AuthGuard(sl())))
+    ..registerSingleton<SystemPages>(SystemPages(sl<AppRouter>()))
+    ..registerSingleton<ConnectivityCubit>(
+      ConnectivityCubit(connectivity ?? connectivityChanges(Connectivity())),
+      dispose: (cubit) => cubit.close(),
+    );
 }

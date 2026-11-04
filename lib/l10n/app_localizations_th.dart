@@ -160,4 +160,24 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get biometricUsePin => 'ใช้ PIN';
+
+  @override
+  String get retry => 'ลองอีกครั้ง';
+
+  @override
+  String get maintenanceTitle => 'ปิดปรับปรุงระบบชั่วคราว';
+
+  @override
+  String get maintenanceBody =>
+      'ขณะนี้เรากำลังปรับปรุงบริการ โปรดลองอีกครั้งในอีกสักครู่';
+
+  @override
+  String get secureConnectionTitle => 'เชื่อมต่ออย่างปลอดภัยไม่ได้';
+
+  @override
+  String get secureConnectionBody =>
+      'เรายืนยันเซิร์ฟเวอร์ไม่ได้ จึงหยุดการเชื่อมต่อเพื่อปกป้องข้อมูลของคุณ หากใช้ Wi-Fi สาธารณะ ให้เปลี่ยนเครือข่ายแล้วลองอีกครั้ง';
+
+  @override
+  String get offlineBanner => 'ไม่มีการเชื่อมต่อเครือข่าย';
 }

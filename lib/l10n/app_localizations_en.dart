@@ -163,4 +163,24 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get biometricUsePin => 'Use PIN';
+
+  @override
+  String get retry => 'Try again';
+
+  @override
+  String get maintenanceTitle => 'Down for maintenance';
+
+  @override
+  String get maintenanceBody =>
+      'We\'re improving the service right now. Try again in a little while.';
+
+  @override
+  String get secureConnectionTitle => 'Can\'t connect securely';
+
+  @override
+  String get secureConnectionBody =>
+      'We couldn\'t verify the server, so we stopped to keep your data safe. If you\'re on public Wi-Fi, switch networks and try again.';
+
+  @override
+  String get offlineBanner => 'No network connection';
 }

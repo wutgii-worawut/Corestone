@@ -1,3 +1,4 @@
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:corestone/core/config/app_config.dart';
 import 'package:corestone/core/di/injection.dart';
 import 'package:corestone/core/storage/secure_store.dart';
@@ -19,7 +20,8 @@ const testPin = '135790';
 /// Registers the app on empty storage for the stage flavor and restores the
 /// session and lock, as bootstrap does. A signed-in user has [testPin] set
 /// and entered unless [hasPin] or [unlocked] say otherwise. [biometrics]
-/// defaults to a device without biometric hardware. Pair with
+/// defaults to a device without biometric hardware, [connectivity] to one
+/// that never reports a change. Pair with
 /// `tearDown(sl.reset)`.
 Future<void> configureTestApp({
   bool signedIn = true,
@@ -28,6 +30,7 @@ Future<void> configureTestApp({
   bool unlocked = true,
   bool biometricOn = false,
   BiometricService? biometrics,
+  Stream<List<ConnectivityResult>> connectivity = const Stream.empty(),
 }) async {
   SharedPreferencesAsyncPlatform.instance =
       InMemorySharedPreferencesAsync.empty();
@@ -43,6 +46,7 @@ Future<void> configureTestApp({
     // async run the hash; the stored format is the same.
     pins: PinRepository(SecureStore(), iterations: 1, derive: derivePinHash),
     biometrics: biometrics ?? FakeBiometricService(available: false),
+    connectivity: connectivity,
   );
   if (signedIn) await sl<TokenStore>().write(testTokens);
   if (signedIn && hasPin) await sl<PinRepository>().setPin(testPin);
