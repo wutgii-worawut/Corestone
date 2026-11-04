@@ -107,4 +107,25 @@ void main() {
       expect((await send('GET', '/nope')).$1, 404);
     }
   });
+
+  test('devices register and unregister only with a session', () async {
+    final access = (await login())['accessToken']! as String;
+    expect((await send('POST', '/devices', body: {'token': 't1'})).$1, 401);
+    final added = await send(
+      'POST',
+      '/devices',
+      body: {'token': 't1'},
+      bearer: access,
+    );
+    expect(added.$1, 204);
+    expect(devices, {'t1'});
+    final removed = await send(
+      'DELETE',
+      '/devices',
+      body: {'token': 't1'},
+      bearer: access,
+    );
+    expect(removed.$1, 204);
+    expect(devices, isEmpty);
+  });
 }

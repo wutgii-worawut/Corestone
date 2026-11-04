@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:corestone/core/typedef.dart';
 import 'package:corestone/features/auth/data/token_store.dart';
 import 'package:corestone/features/auth/domain/auth_repository.dart';
+import 'package:corestone/features/auth/domain/auth_tokens.dart';
 import 'package:dartz/dartz.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -26,10 +27,14 @@ final class SessionUnauthenticated extends SessionState {
 /// Tokens stay in [TokenStore]; the state only says whether a session
 /// exists, so nothing logs or rebuilds on a token rotation.
 class SessionCubit extends Cubit<SessionState> {
-  SessionCubit(this._auth, this._tokens) : super(const SessionUnknown());
+  /// [onSignOut] runs after the state is already signed out, with the old
+  /// tokens, before the server revokes them.
+  SessionCubit(this._auth, this._tokens, {this._onSignOut})
+    : super(const SessionUnknown());
 
   final AuthRepository _auth;
   final TokenStore _tokens;
+  final Future<void> Function(AuthTokens tokens)? _onSignOut;
 
   /// An unreadable store counts as signed out, so startup never fails here.
   Future<void> restore() async {
@@ -56,7 +61,16 @@ class SessionCubit extends Cubit<SessionState> {
     final tokens = await _tokens.read();
     await _tokens.clear();
     emit(const SessionUnauthenticated());
-    if (tokens != null) unawaited(_auth.signOut(tokens.refreshToken));
+    if (tokens != null) unawaited(_revoke(tokens));
+  }
+
+  Future<void> _revoke(AuthTokens tokens) async {
+    try {
+      await _onSignOut?.call(tokens);
+    } on Object catch (_) {
+      // The revoke below still runs.
+    }
+    await _auth.signOut(tokens.refreshToken);
   }
 
   /// Called by the auth interceptor after it cleared a session the server
