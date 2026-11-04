@@ -65,7 +65,15 @@ class ApiClient {
     String path, {
     required Parse<T> parse,
     Object? data,
-  }) => _send(() => _dio.delete<String>(path, data: data), parse);
+    Map<String, Object?>? headers,
+  }) => _send(
+    () => _dio.delete<String>(
+      path,
+      data: data,
+      options: Options(headers: headers),
+    ),
+    parse,
+  );
 
   /// Sends prepared [options] as they are and throws [DioException] on
   /// failure. The auth interceptor retries through this on a client without

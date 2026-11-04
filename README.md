@@ -31,6 +31,31 @@ well-formed email and password sign in. Stage and prod refuse to start with it.
 fvm flutter run --flavor dev --dart-define-from-file=config/dev.json --dart-define=DEMO_MODE=true
 ```
 
+## Push notifications
+
+Push uses Firebase Cloud Messaging and is off until a flavor has Firebase config
+files. With none, every flavor builds and runs, and the app logs
+`push off: no Firebase config for <flavor>`. No other Firebase product is used.
+
+To turn push on for a flavor:
+
+1. In the Firebase console, add an Android app with the flavor's application id
+   (`com.wutstack.corestone.dev`, `.stage`, or no suffix for prod) and an iOS app
+   with the bundle id from `ios/Flutter/<Config>-<flavor>.xcconfig`.
+2. Put `google-services.json` at `android/app/src/<flavor>/` and
+   `GoogleService-Info.plist` at `ios/config/<flavor>/`. Both are gitignored, so
+   never commit them. In CI, store each file base64-encoded in the secrets
+   `GOOGLE_SERVICES_JSON_<FLAVOR>` and `GOOGLE_SERVICE_INFO_PLIST_<FLAVOR>` and
+   run `tool/firebase_config.sh` before the build.
+3. For iOS, enable the Push Notifications capability for the App ID in your Apple
+   team, upload an APNs auth key to the Firebase project, and set your
+   `DEVELOPMENT_TEAM`. `ios/Runner/Runner.entitlements` already asks for
+   `aps-environment`.
+
+The app asks for notification permission after sign in, registers the token with
+`POST /devices`, re-registers on token refresh, and sends `DELETE /devices` on sign
+out. Tapping a notification opens the app to Home.
+
 ## Verification lanes
 
 `tool/lanes/android.sh` and `tool/lanes/ios.sh` drive the app on an emulator or a

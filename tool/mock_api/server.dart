@@ -15,8 +15,7 @@ import 'dart:math';
 ///   authorized call gets 401 and the app refreshes.
 /// - `GET /__mock/revoke` invalidates both tokens, so the refresh fails too.
 ///
-/// Each endpoint is one entry in [routes]. CS-11 adds `POST /devices` and
-/// `DELETE /devices`, and CS-17 adds `POST /feedback`.
+/// Each endpoint is one entry in [routes]. CS-17 adds `POST /feedback`.
 final Map<String, FutureOr<(int, Object?)> Function(HttpRequest request)>
 routes = {
   'POST /auth/login': (request) async {
@@ -50,7 +49,22 @@ routes = {
     _revoke();
     return (204, null);
   },
+  'POST /devices': (request) async {
+    if (!_authorized(request)) return (401, {'error': 'access token invalid'});
+    final token = (await _body(request))['token'];
+    if (token is! String || token.isEmpty) return (400, {'error': 'no token'});
+    devices.add(token);
+    return (204, null);
+  },
+  'DELETE /devices': (request) async {
+    if (!_authorized(request)) return (401, {'error': 'access token invalid'});
+    devices.remove((await _body(request))['token']);
+    return (204, null);
+  },
 };
+
+/// Push tokens registered with `POST /devices`.
+final devices = <String>{};
 
 bool _authorized(HttpRequest request) =>
     _access != null &&
@@ -83,6 +97,7 @@ Future<Map<String, Object?>> _body(HttpRequest request) async {
 
 Future<HttpServer> startMockServer({int port = 8080}) async {
   _revoke();
+  devices.clear();
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, port);
   int? nextStatus;
   server.listen((request) async {
