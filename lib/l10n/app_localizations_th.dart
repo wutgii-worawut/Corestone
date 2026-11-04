@@ -118,7 +118,7 @@ class AppLocalizationsTh extends AppLocalizations {
   }
 
   @override
-  String get lockedOut => 'กรอก PIN ผิดหลายครั้งเกินไป กำลังออกจากระบบ';
+  String get lockedOut => 'กำลังออกจากระบบ…';
 
   @override
   String get forgotPin => 'ลืม PIN? ออกจากระบบ';

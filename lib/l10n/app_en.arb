@@ -40,7 +40,7 @@
       }
     }
   },
-  "lockedOut": "Too many wrong PINs. Signing you out.",
+  "lockedOut": "Signing you out…",
   "forgotPin": "Forgot PIN? Sign out",
   "pinCreateTitle": "Create a 6-digit PIN",
   "pinCreateSubtitle": "You will enter it to open the app.",

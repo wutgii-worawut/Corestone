@@ -25,7 +25,6 @@ class AppLockGate extends StatefulWidget {
 
 class _AppLockGateState extends State<AppLockGate> with WidgetsBindingObserver {
   final _lock = sl<AppLockCubit>();
-  final _session = sl<SessionCubit>();
   late final AppLifecycleListener _lifecycle;
   bool _covered = false;
   bool _gated = false;
@@ -63,17 +62,18 @@ class _AppLockGateState extends State<AppLockGate> with WidgetsBindingObserver {
   Widget build(BuildContext context) {
     final session = context.watch<SessionCubit>().state;
     final lock = context.watch<AppLockCubit>().state;
-    final gate = session is! SessionAuthenticated
-        ? null
-        : switch (lock) {
-            AppLockUnlocked() => null,
-            AppLockNoPin() => Scaffold(body: SetPinView(onDone: _lock.setPin)),
-            AppLockLocked() || AppLockLockedOut() => LockView(
-              state: lock,
-              onPin: _lock.unlock,
-              onForgotPin: () => unawaited(_session.signOut()),
-            ),
-          };
+    // A lock outlives the session that set it until the PIN is cleared, so
+    // a sign-out from the lock never shows the app on its way to login.
+    final gate = switch (lock) {
+      AppLockUnlocked() => null,
+      AppLockNoPin() when session is! SessionAuthenticated => null,
+      AppLockNoPin() => Scaffold(body: SetPinView(onDone: _lock.setPin)),
+      AppLockLocked() || AppLockLockedOut() => LockView(
+        state: lock,
+        onPin: _lock.unlock,
+        onForgotPin: () => unawaited(_lock.forgotPin()),
+      ),
+    };
     _gated = gate != null;
     return Stack(
       fit: StackFit.expand,
@@ -85,7 +85,9 @@ class _AppLockGateState extends State<AppLockGate> with WidgetsBindingObserver {
             child: ExcludeFocus(excluding: _gated, child: widget.child),
           ),
         ),
-        if (gate != null) FocusScope(autofocus: true, child: gate),
+        // Its own messenger, so snackbars from the hidden app stay hidden.
+        if (gate != null)
+          ScaffoldMessenger(child: FocusScope(autofocus: true, child: gate)),
         if (_covered && gate == null)
           ColoredBox(color: Theme.of(context).colorScheme.surface),
       ],

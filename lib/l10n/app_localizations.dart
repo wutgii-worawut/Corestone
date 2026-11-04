@@ -299,7 +299,7 @@ abstract class AppLocalizations {
   /// No description provided for @lockedOut.
   ///
   /// In en, this message translates to:
-  /// **'Too many wrong PINs. Signing you out.'**
+  /// **'Signing you out…'**
   String get lockedOut;
 
   /// No description provided for @forgotPin.

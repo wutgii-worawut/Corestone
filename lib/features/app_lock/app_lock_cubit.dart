@@ -34,8 +34,8 @@ final class AppLockUnlocked extends AppLockState {
   const AppLockUnlocked();
 }
 
-/// Too many wrong PINs. The session is being signed out, which then clears
-/// the PIN and moves to [AppLockNoPin].
+/// Too many wrong PINs, or a forgotten one. The session is being signed
+/// out, which then clears the PIN and moves to [AppLockNoPin].
 final class AppLockLockedOut extends AppLockState {
   const AppLockLockedOut();
 }
@@ -66,11 +66,17 @@ class AppLockCubit extends Cubit<AppLockState> {
   /// flow shows the right number without a store read.
   int _failed = 0;
 
-  /// Run after [SessionCubit.restore] and before the first frame.
+  /// Run after [SessionCubit.restore] and before the first frame. Never
+  /// throws, so a broken store cannot stop the app from starting.
   Future<void> load() async {
     if (_session.state is! SessionAuthenticated) return _clear();
-    if (!await _pins.hasPin()) return emit(const AppLockNoPin());
-    _failed = await _pins.failedAttempts();
+    try {
+      if (!await _pins.hasPin()) return emit(const AppLockNoPin());
+      _failed = await _pins.failedAttempts();
+    } on Object {
+      // A PIN that cannot be read cannot be checked, so sign in again.
+      _failed = maxAttempts;
+    }
     if (_failed >= maxAttempts) return _lockOut();
     emit(AppLockLocked(_failed));
   }
@@ -78,7 +84,8 @@ class AppLockCubit extends Cubit<AppLockState> {
   Future<void> setPin(String pin) async {
     await _pins.setPin(pin);
     _failed = 0;
-    emit(const AppLockUnlocked());
+    // A change of PIN that finishes after a lock must not undo the lock.
+    if (state is AppLockNoPin) emit(const AppLockUnlocked());
   }
 
   Future<void> unlock(String pin) async {
@@ -92,6 +99,9 @@ class AppLockCubit extends Cubit<AppLockState> {
   /// Checks the current PIN before a change. A wrong PIN counts toward
   /// [maxAttempts] like one on the lock screen.
   Future<PinCheck> confirmCurrentPin(String pin) => _check(pin);
+
+  /// Signs out, which clears the PIN, so the user can sign in again.
+  Future<void> forgotPin() => _lockOut();
 
   void appHidden() => _hiddenAt ??= _now();
 
@@ -109,7 +119,12 @@ class AppLockCubit extends Cubit<AppLockState> {
   }
 
   Future<PinCheck> _check(String pin) async {
-    final check = await _pins.verify(pin);
+    PinCheck check;
+    try {
+      check = await _pins.verify(pin);
+    } on Object {
+      check = (correct: false, failedAttempts: maxAttempts);
+    }
     _failed = check.failedAttempts;
     if (check.failedAttempts >= maxAttempts) await _lockOut();
     return check;
@@ -117,11 +132,19 @@ class AppLockCubit extends Cubit<AppLockState> {
 
   Future<void> _lockOut() async {
     emit(const AppLockLockedOut());
-    await _session.signOut();
+    try {
+      await _session.signOut();
+    } on Object {
+      // The store failed, so end the session in memory; restore treats an
+      // unreadable store as signed out on the next start too.
+      _session.sessionExpired();
+    }
   }
 
   Future<void> _clear() async {
-    await _pins.clear();
+    // A record that could not be deleted still fails closed on load and is
+    // replaced by the next PIN.
+    await _pins.clear().catchError((Object _) {});
     _failed = 0;
     if (!isClosed) emit(const AppLockNoPin());
   }

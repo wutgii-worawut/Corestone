@@ -33,7 +33,7 @@
   "deleteAccountConfirm": "ลบบัญชีของฉัน",
   "lockTitle": "กรอก PIN ของคุณ",
   "wrongPin": "{count, plural, other{PIN ไม่ถูกต้อง เหลืออีก {count} ครั้งก่อนออกจากระบบ}}",
-  "lockedOut": "กรอก PIN ผิดหลายครั้งเกินไป กำลังออกจากระบบ",
+  "lockedOut": "กำลังออกจากระบบ…",
   "forgotPin": "ลืม PIN? ออกจากระบบ",
   "pinCreateTitle": "ตั้ง PIN 6 หลัก",
   "pinCreateSubtitle": "คุณจะใช้ PIN นี้เพื่อเปิดแอป",

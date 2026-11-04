@@ -43,9 +43,11 @@ class PinRepository {
     return result;
   }
 
-  Future<bool> hasPin() => _serial(() async => await _read() != null);
+  /// True for an unreadable record too, so a corrupt store fails closed.
+  Future<bool> hasPin() => _serial(() async => await _store.read(key) != null);
 
-  /// 0 when there is no PIN.
+  /// 0 when there is no PIN. Throws [FormatException] for an unreadable
+  /// record, as [verify] does.
   Future<int> failedAttempts() =>
       _serial(() async => (await _read())?.failed ?? 0);
 
@@ -82,7 +84,7 @@ class PinRepository {
     try {
       return _PinRecord.fromJson(jsonDecode(raw));
     } on Object {
-      return null;
+      throw const FormatException('Unreadable PIN record');
     }
   }
 

@@ -1,9 +1,12 @@
+import 'dart:async';
+
 import 'package:corestone/core/storage/secure_store.dart';
 import 'package:corestone/features/app_lock/app_lock_cubit.dart';
 import 'package:corestone/features/app_lock/pin_repository.dart';
 import 'package:corestone/features/auth/data/fake_auth_repository.dart';
 import 'package:corestone/features/auth/data/token_store.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -35,6 +38,7 @@ void main() {
   });
 
   Future<void> unlocked() async {
+    await cubit.load();
     await cubit.setPin(pin);
     expect(cubit.state, isA<AppLockUnlocked>());
   }
@@ -202,4 +206,55 @@ void main() {
     expect(cubit.state, isA<AppLockNoPin>());
     expect(await pins.hasPin(), isFalse);
   });
+
+  test('a corrupt PIN record fails closed and signs out', () async {
+    await pins.setPin(pin);
+    final stored = (await store.read(PinRepository.key))!;
+    await store.write(PinRepository.key, stored.substring(3));
+    await cubit.load();
+    expect(session.state, isA<SessionUnauthenticated>());
+    expect(cubit.state, isNot(isA<AppLockUnlocked>()));
+  });
+
+  test('an unreadable store does not stop load', () async {
+    await cubit.close();
+    cubit = AppLockCubit(PinRepository(_BrokenStore()), session);
+    await expectLater(cubit.load(), completes);
+    expect(session.state, isA<SessionUnauthenticated>());
+  });
+
+  test('a PIN change that finishes after a lock keeps the lock', () async {
+    final hashing = Completer<void>();
+    var holdHash = false;
+    pins = PinRepository(
+      store,
+      iterations: 1,
+      derive: (pin, salt, iterations) async {
+        if (holdHash) await hashing.future;
+        return derivePinHash(pin, salt, iterations);
+      },
+    );
+    await cubit.close();
+    cubit = start();
+    await unlocked();
+
+    holdHash = true;
+    final changing = cubit.setPin('246810');
+    cubit.appHidden();
+    now = now.add(const Duration(minutes: 1));
+    cubit.appShown();
+    hashing.complete();
+    await changing;
+    expect(cubit.state, isA<AppLockLocked>());
+  });
+}
+
+class _BrokenStore extends SecureStore {
+  @override
+  Future<String?> read(String key) =>
+      Future.error(PlatformException(code: 'decrypt'));
+
+  @override
+  Future<void> delete(String key) =>
+      Future.error(PlatformException(code: 'decrypt'));
 }

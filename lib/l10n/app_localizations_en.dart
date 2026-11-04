@@ -121,7 +121,7 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get lockedOut => 'Too many wrong PINs. Signing you out.';
+  String get lockedOut => 'Signing you out…';
 
   @override
   String get forgotPin => 'Forgot PIN? Sign out';

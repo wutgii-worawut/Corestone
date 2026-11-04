@@ -108,4 +108,55 @@ void main() {
     final check = await sl<AppLockCubit>().confirmCurrentPin('246810');
     expect(check.correct, isTrue);
   });
+
+  /// Pumps frames through a route transition and counts any with Home on.
+  Future<int> framesShowingHome(WidgetTester tester) async {
+    var frames = 0;
+    for (var i = 0; i < 60; i++) {
+      await tester.pump(const Duration(milliseconds: 16));
+      if (find.text(home).evaluate().isNotEmpty) frames++;
+    }
+    return frames;
+  }
+
+  testWidgets('five wrong PINs go to login without showing Home', (
+    tester,
+  ) async {
+    await configureTestApp(unlocked: false);
+    await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
+
+    for (var i = 0; i < 5; i++) {
+      await enter(tester, '000000');
+      await tester.pump();
+    }
+
+    expect(await framesShowingHome(tester), 0);
+    await tester.pumpAndSettle();
+    expect(find.text('Welcome back'), findsOneWidget);
+  });
+
+  testWidgets('forgot PIN goes to login without showing Home', (tester) async {
+    await configureTestApp(unlocked: false);
+    await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Forgot PIN? Sign out'));
+    await tester.tap(find.text('Forgot PIN? Sign out'));
+
+    expect(await framesShowingHome(tester), 0);
+  });
+
+  testWidgets('a snackbar from the locked app stays hidden', (tester) async {
+    await configureTestApp(unlocked: false);
+    await tester.pumpWidget(const App());
+    await tester.pumpAndSettle();
+
+    final hidden = tester.element(find.text(home, skipOffstage: false));
+    ScaffoldMessenger.of(hidden)
+        .showSnackBar(const SnackBar(content: Text('private')));
+    await tester.pumpAndSettle();
+
+    expect(find.text('private'), findsNothing);
+  });
 }
