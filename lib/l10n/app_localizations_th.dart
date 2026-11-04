@@ -151,4 +151,13 @@ class AppLocalizationsTh extends AppLocalizations {
   String pinDigitsEntered(int entered, int total) {
     return 'กรอกแล้ว $entered จาก $total หลัก';
   }
+
+  @override
+  String get biometricUnlock => 'ปลดล็อกด้วยไบโอเมตริก';
+
+  @override
+  String get biometricReason => 'ยืนยันตัวตนเพื่อเปิดแอป';
+
+  @override
+  String get biometricUsePin => 'ใช้ PIN';
 }

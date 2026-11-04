@@ -361,6 +361,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{entered} of {total} digits entered'**
   String pinDigitsEntered(int entered, int total);
+
+  /// No description provided for @biometricUnlock.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlock with biometrics'**
+  String get biometricUnlock;
+
+  /// No description provided for @biometricReason.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm it is you to open the app'**
+  String get biometricReason;
+
+  /// No description provided for @biometricUsePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Use PIN'**
+  String get biometricUsePin;
 }
 
 class _AppLocalizationsDelegate

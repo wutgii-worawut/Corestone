@@ -1,5 +1,6 @@
 package com.wutstack.corestone
 
-import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.android.FlutterFragmentActivity
 
-class MainActivity : FlutterActivity()
+// local_auth shows its prompt as a fragment, so it needs a FragmentActivity.
+class MainActivity : FlutterFragmentActivity()

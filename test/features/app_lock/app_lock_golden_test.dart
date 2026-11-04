@@ -31,6 +31,20 @@ void main() {
           state: const AppLockLocked(2),
           onPin: (_) async {},
           onForgotPin: () {},
+          onBiometric: (_) async {},
+        ),
+      ),
+    );
+    goldenTest(
+      'Lock screen with biometrics renders in $code',
+      fileName: 'lock_biometric_${code}_light',
+      builder: () => _frame(
+        locale,
+        LockView(
+          state: const AppLockLocked(0, biometric: true),
+          onPin: (_) async {},
+          onForgotPin: () {},
+          onBiometric: (_) async {},
         ),
       ),
     );

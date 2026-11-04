@@ -154,4 +154,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String pinDigitsEntered(int entered, int total) {
     return '$entered of $total digits entered';
   }
+
+  @override
+  String get biometricUnlock => 'Unlock with biometrics';
+
+  @override
+  String get biometricReason => 'Confirm it is you to open the app';
+
+  @override
+  String get biometricUsePin => 'Use PIN';
 }

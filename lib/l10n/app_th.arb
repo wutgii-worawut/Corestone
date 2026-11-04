@@ -43,5 +43,8 @@
   "changePin": "เปลี่ยน PIN",
   "pinChanged": "เปลี่ยน PIN แล้ว",
   "pinDelete": "ลบ",
-  "pinDigitsEntered": "กรอกแล้ว {entered} จาก {total} หลัก"
+  "pinDigitsEntered": "กรอกแล้ว {entered} จาก {total} หลัก",
+  "biometricUnlock": "ปลดล็อกด้วยไบโอเมตริก",
+  "biometricReason": "ยืนยันตัวตนเพื่อเปิดแอป",
+  "biometricUsePin": "ใช้ PIN"
 }
