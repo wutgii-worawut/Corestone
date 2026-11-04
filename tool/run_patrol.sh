@@ -11,16 +11,8 @@ set -euo pipefail
 target="${1:-integration_test/app_test.dart}"
 : "${ANDROID_SERIAL:?set ANDROID_SERIAL to the device to test on}"
 export ANDROID_SERIAL
-if [ -z "${FLUTTER:-}" ]; then
-  FLUTTER=flutter
-  if [ -d .fvm/flutter_sdk ]; then
-    if [ "${OS:-}" = Windows_NT ]; then
-      FLUTTER="$(cd .fvm/flutter_sdk && pwd -W)/bin/flutter.bat"
-    else
-      FLUTTER="$(cd .fvm/flutter_sdk && pwd -P)/bin/flutter"
-    fi
-  fi
-fi
+repo="$(pwd)"
+. tool/sdk.sh
 export PATROL_FLUTTER_COMMAND="$FLUTTER"
 dart="${FLUTTER%flutter*}dart${FLUTTER##*flutter}"
 log="$(mktemp)"

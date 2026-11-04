@@ -1043,27 +1043,33 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Depends on.** CS-13 and CS-14.
 
+**Operator amendment.** The done check is a local script, not a CI job: a project generated from the template passes analyze, test and an Android build, checked by `tool/template_smoke.sh`. GitHub CI is disabled, so PRs show no checks and the evidence is local. iOS is skipped for now and reported as unverified. The App Distribution workflow exists but stays disabled.
+
 **Files.**
 
-- [ ] Edit `android/app/build.gradle.kts` to read `key.properties` for release signing.
-- [ ] Edit `.github/workflows/ci.yml` to add `distribute-android` and `template-smoke`.
-- [ ] Edit `TEMPLATE.md` with the secret names.
+- [ ] Edit `android/app/build.gradle.kts` to read `key.properties` for release signing, falling back to the debug key with a Gradle warning.
+- [ ] Create `.github/workflows/distribute.yml`, `workflow_dispatch` only, disabled with `gh workflow disable` after merge.
+- [ ] Create `tool/template_smoke.sh`.
+- [ ] Edit `tool/new_project.dart` to run `dart pub get` and the `directives_ordering` fix after renaming, and to remove `tool/template_smoke.sh` from a generated app.
+- [ ] Edit `TEMPLATE.md` with release signing, the secret names and the done check.
 
 **Build.**
 
-- [ ] `distribute-android` builds the dev flavor on pushes to `main` and uploads it with `firebase appdistribution:distribute` using a service account secret.
-- [ ] `template-smoke` runs the generator into a temp copy and builds Android and iOS from it.
+- [ ] `distribute-android` builds a signed release APK for the chosen flavor and uploads it with `firebase appdistribution:distribute` using a service account secret and a tester group input.
+- [ ] `tool/template_smoke.sh` generates `acme_app` into a temp copy, checks no template identity is left, then runs `pub get`, `analyze`, `test`, a debug dev APK build and a release prod APK build.
 
 **You see.**
 
-- [ ] Testers receive a Firebase App Distribution build, and `template-smoke` is green.
+- [ ] `tool/template_smoke.sh` prints PASS with per-step timings, and FAIL with a non-zero exit when a step breaks.
 
 **Verify, unit.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] `template-smoke` is the done check. Run it with `gh workflow run ci.yml` and read both builds.
+- [ ] `tool/template_smoke.sh` is the done check. Run it locally and read every step.
+- [ ] `apksigner verify --print-certs` on the prod release APK shows the `key.properties` key when the file is present and the debug key when it is absent.
 
 **Verify, live.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked. Ten lanes on `inherit-parent` at the PR head, per the boot recipe.
 
+- [ ] Lanes 1, 2, 4 and 7 are deferred: distribution stays disabled and iOS is unverified.
 - [ ] Lane 1. Regression lane against trunk. Trunk builds without distribution. Record that, then push to a test branch at the head. Save `distribution.png`. Pass when the App Distribution console lists the new build.
 - [ ] Lane 2. Install the distributed build from the tester invite on the emulator. Save `tester-install.png`. Pass when it launches.
 - [ ] Lane 3. Read the `template-smoke` Android step. Save `smoke-android.png`. Pass when the renamed APK builds.
@@ -1077,10 +1083,10 @@ Each live lane runs in its own git worktree at the PR head. Android lanes drive 
 
 **Verify, perf.** Tests alone are not sufficient verification. A PR is verified only when its unit, live, and perf boxes are all checked.
 
-- [ ] Metric. Wall time of the full CI workflow on a push to `main`.
-- [ ] Probe. Read the workflow duration from three runs at trunk and three at the head, alternating.
-- [ ] Baseline. Record the trunk median first.
-- [ ] Rule. Fail when the head median exceeds 30 minutes.
+- [ ] Metric. Wall time of `tool/template_smoke.sh`, since CI is disabled.
+- [ ] Probe. Read the total the script prints at the head.
+- [ ] Baseline. Trunk has no smoke script, so there is no baseline.
+- [ ] Rule. Fail when the total exceeds 30 minutes.
 
 **Review gate.** None. CS-15 is not review-gated.
 

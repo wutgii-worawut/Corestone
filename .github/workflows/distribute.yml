@@ -1,0 +1,78 @@
+# Builds a signed release APK and sends it to Firebase App Distribution.
+# Disabled by default: it has no push or schedule trigger, and the template
+# repository keeps it disabled with `gh workflow disable distribute.yml`.
+# To use it, add the secrets listed in TEMPLATE.md "App Distribution", run
+# `gh workflow enable distribute.yml`, then start it by hand:
+#   gh workflow run distribute.yml -f flavor=dev -f testers=qa -f release_notes="..."
+name: distribute
+
+on:
+  workflow_dispatch:
+    inputs:
+      flavor:
+        description: Flavor to build
+        type: choice
+        options: [dev, stage, prod]
+        default: dev
+      testers:
+        description: Firebase App Distribution tester group aliases, comma separated
+        type: string
+        required: true
+      release_notes:
+        description: Release notes shown to testers
+        type: string
+        default: ""
+
+jobs:
+  distribute-android:
+    runs-on: ubuntu-latest
+    env:
+      FLAVOR: ${{ inputs.flavor }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: subosito/flutter-action@v2
+        with:
+          flutter-version-file: .fvmrc
+          cache: true
+      - name: Write google-services.json
+        env:
+          GOOGLE_SERVICES_JSON_DEV: ${{ secrets.GOOGLE_SERVICES_JSON_DEV }}
+          GOOGLE_SERVICES_JSON_STAGE: ${{ secrets.GOOGLE_SERVICES_JSON_STAGE }}
+          GOOGLE_SERVICES_JSON_PROD: ${{ secrets.GOOGLE_SERVICES_JSON_PROD }}
+        run: tool/firebase_config.sh "$FLAVOR"
+      - name: Write the release keystore and key.properties
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          printf '%s' "$ANDROID_KEYSTORE_BASE64" | base64 --decode > android/app/upload-keystore.jks
+          cat > android/key.properties <<EOF
+          storeFile=upload-keystore.jks
+          storePassword=$ANDROID_KEYSTORE_PASSWORD
+          keyAlias=$ANDROID_KEY_ALIAS
+          keyPassword=$ANDROID_KEY_PASSWORD
+          EOF
+      - run: flutter build apk --release --flavor "$FLAVOR" --dart-define-from-file="config/$FLAVOR.json"
+      - name: Upload to App Distribution
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS_JSON: ${{ secrets.FIREBASE_SERVICE_ACCOUNT_JSON }}
+          FIREBASE_APP_ID_DEV: ${{ secrets.FIREBASE_APP_ID_ANDROID_DEV }}
+          FIREBASE_APP_ID_STAGE: ${{ secrets.FIREBASE_APP_ID_ANDROID_STAGE }}
+          FIREBASE_APP_ID_PROD: ${{ secrets.FIREBASE_APP_ID_ANDROID_PROD }}
+          TESTERS: ${{ inputs.testers }}
+          RELEASE_NOTES: ${{ inputs.release_notes }}
+        run: |
+          printf '%s' "$GOOGLE_APPLICATION_CREDENTIALS_JSON" > "$RUNNER_TEMP/service-account.json"
+          export GOOGLE_APPLICATION_CREDENTIALS="$RUNNER_TEMP/service-account.json"
+          app_id_var="FIREBASE_APP_ID_$(echo "$FLAVOR" | tr '[:lower:]' '[:upper:]')"
+          npx --yes firebase-tools@14 appdistribution:distribute \
+            "build/app/outputs/flutter-apk/app-$FLAVOR-release.apk" \
+            --app "${!app_id_var}" \
+            --groups "$TESTERS" \
+            --release-notes "$RELEASE_NOTES"

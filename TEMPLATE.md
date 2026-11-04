@@ -16,11 +16,12 @@ renames it to your app, so nobody edits identifiers by hand.
    The generator refuses a dirty git tree, so every change it makes shows up
    in one diff you can review or throw away. It prints each changed, moved
    and removed file.
-3. Fix the import order the new package name changes, then check the app:
+   After renaming, it runs `dart pub get` and
+   `dart fix --apply --code=directives_ordering`, because the new package
+   name changes the import order the lints require.
+3. Check the app:
 
    ```sh
-   fvm flutter pub get
-   fvm dart fix --apply --code=directives_ordering
    fvm dart run build_runner build --delete-conflicting-outputs
    fvm flutter gen-l10n
    fvm flutter analyze
@@ -67,6 +68,7 @@ title and the test expectations that name the app. It moves
 `MainActivity.kt` and `MainActivityTest.java` to the new package directory and
 removes `spec/template-plan.md`, the template's own build plan.
 
+It also removes `tool/template_smoke.sh`, the template's done check.
 It leaves `NOTICE`, `LICENSE`, this file and the generator with its test as
 they are. Those are the only files where `corestone` or `wutstack` may stay:
 
@@ -84,9 +86,68 @@ git grep -n -i -e corestone -e wutstack
   host `assetlinks.json` for the Android ids and the
   `apple-app-site-association` file for `<TeamID>.<bundle id>`, as the README
   describes.
-- Signing. Add an Android release keystore; the release build type signs with
-  the debug key until then.
+- Signing. Add an Android release keystore, as "Release signing" below
+  describes. Until then release builds sign with the debug key.
 - Apple. Set your development team in Xcode, register the bundle ids, and
   enable Push Notifications and Associated Domains for each App ID.
 - The README. It still describes the template, and its Plan section points
   at the removed plan. Rewrite it for your app.
+
+## Release signing
+
+`android/app/build.gradle.kts` signs release builds with the key that
+`android/key.properties` names. Without that file, release builds sign with
+the debug key and Gradle prints a warning, so local and template builds still
+work. Never commit the keystore or `key.properties`; `.gitignore` already
+excludes `key.properties`, `*.jks` and `*.keystore`.
+
+Create an upload keystore once, outside the repository, and keep it and its
+passwords in your password manager:
+
+```sh
+keytool -genkey -v -keystore ~/upload-keystore.jks -storetype JKS   -keyalg RSA -keysize 2048 -validity 10000 -alias upload
+```
+
+Then write `android/key.properties`. A relative `storeFile` resolves against
+`android/app/`:
+
+```properties
+storePassword=<keystore password>
+keyPassword=<key password>
+keyAlias=upload
+storeFile=/absolute/path/to/upload-keystore.jks
+```
+
+Check the signature with `apksigner verify --print-certs` from the Android SDK
+build-tools on `build/app/outputs/flutter-apk/app-prod-release.apk`.
+
+## App Distribution
+
+`.github/workflows/distribute.yml` builds a signed release APK for one flavor
+and uploads it to Firebase App Distribution. It runs only when started by
+hand, and the template keeps it disabled. To use it, add these repository
+secrets, run `gh workflow enable distribute.yml`, then
+`gh workflow run distribute.yml -f flavor=dev -f testers=<group alias>`.
+
+| Secret | Value |
+| --- | --- |
+| `ANDROID_KEYSTORE_BASE64` | The upload keystore, base64-encoded |
+| `ANDROID_KEYSTORE_PASSWORD` | Its store password |
+| `ANDROID_KEY_ALIAS` | Its key alias |
+| `ANDROID_KEY_PASSWORD` | Its key password |
+| `FIREBASE_SERVICE_ACCOUNT_JSON` | A service account key with the Firebase App Distribution Admin role |
+| `FIREBASE_APP_ID_ANDROID_DEV`, `_STAGE`, `_PROD` | Each flavor's Firebase Android app id, `1:<number>:android:<hash>` |
+| `GOOGLE_SERVICES_JSON_DEV`, `_STAGE`, `_PROD` | Each flavor's `google-services.json`, base64-encoded, as `tool/firebase_config.sh` reads them |
+
+Only the secrets for the flavor you distribute need values.
+
+## Template done check
+
+`tool/template_smoke.sh` is the template's done check. It copies the checkout
+(HEAD plus uncommitted edits to tracked files) to a temp directory, renames it
+to `acme_app`, checks no template identity is left, then runs `pub get`,
+`analyze`, `test`, a debug dev APK build and a release prod APK build. It
+prints a PASS or FAIL line per step with timings and exits non-zero on any
+failure. Run it from Git Bash on Windows, or a shell on macOS or Linux.
+GitHub CI is disabled for now, so this local run is the evidence. iOS is not
+built anywhere yet and stays unverified.
