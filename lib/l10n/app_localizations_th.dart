@@ -103,4 +103,52 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get deleteAccountConfirm => 'ลบบัญชีของฉัน';
+
+  @override
+  String get lockTitle => 'กรอก PIN ของคุณ';
+
+  @override
+  String wrongPin(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'PIN ไม่ถูกต้อง เหลืออีก $count ครั้งก่อนออกจากระบบ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lockedOut => 'กรอก PIN ผิดหลายครั้งเกินไป กำลังออกจากระบบ';
+
+  @override
+  String get forgotPin => 'ลืม PIN? ออกจากระบบ';
+
+  @override
+  String get pinCreateTitle => 'ตั้ง PIN 6 หลัก';
+
+  @override
+  String get pinCreateSubtitle => 'คุณจะใช้ PIN นี้เพื่อเปิดแอป';
+
+  @override
+  String get pinConfirmTitle => 'กรอก PIN อีกครั้ง';
+
+  @override
+  String get pinMismatch => 'PIN ไม่ตรงกัน กรุณาลองอีกครั้ง';
+
+  @override
+  String get pinCurrentTitle => 'กรอก PIN ปัจจุบัน';
+
+  @override
+  String get changePin => 'เปลี่ยน PIN';
+
+  @override
+  String get pinChanged => 'เปลี่ยน PIN แล้ว';
+
+  @override
+  String get pinDelete => 'ลบ';
+
+  @override
+  String pinDigitsEntered(int entered, int total) {
+    return 'กรอกแล้ว $entered จาก $total หลัก';
+  }
 }

@@ -1,5 +1,6 @@
 import 'package:corestone/app.dart';
 import 'package:corestone/core/di/injection.dart';
+import 'package:corestone/features/app_lock/pin_repository.dart';
 import 'package:corestone/features/auth/data/token_store.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
 import 'package:flutter/material.dart';
@@ -31,12 +32,14 @@ void main() {
     expect(_signIn, findsNothing);
   });
 
-  testWidgets('a new session moves sign-in to Home', (tester) async {
+  testWidgets('a new session moves sign-in to setting a PIN', (tester) async {
     await startApp(tester, signedIn: false);
     await sl<TokenStore>().write(testTokens);
     await sl<SessionCubit>().restore();
     await tester.pumpAndSettle();
-    expect(_home, findsOneWidget);
+    expect(find.text('Create a 6-digit PIN'), findsOneWidget);
+    expect(_signIn, findsNothing);
+    expect(_home, findsNothing);
   });
 
   testWidgets('Sign out in Settings returns to sign-in', (tester) async {
@@ -56,6 +59,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(_signIn, findsOneWidget);
     expect(await sl<TokenStore>().read(), isNull);
+    expect(await sl<PinRepository>().hasPin(), isFalse);
   });
 
   testWidgets('a forced logout returns to sign-in', (tester) async {
@@ -63,5 +67,6 @@ void main() {
     sl<SessionCubit>().sessionExpired();
     await tester.pumpAndSettle();
     expect(_signIn, findsOneWidget);
+    expect(await sl<PinRepository>().hasPin(), isFalse);
   });
 }

@@ -30,5 +30,35 @@
   "deleteAccount": "Delete account",
   "deleteAccountTitle": "Delete your account?",
   "deleteAccountBody": "This permanently deletes your account and its data, then signs you out. You cannot undo it.",
-  "deleteAccountConfirm": "Delete my account"
+  "deleteAccountConfirm": "Delete my account",
+  "lockTitle": "Enter your PIN",
+  "wrongPin": "{count, plural, =1{Wrong PIN. 1 try left before you are signed out.} other{Wrong PIN. {count} tries left before you are signed out.}}",
+  "@wrongPin": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "lockedOut": "Too many wrong PINs. Signing you out.",
+  "forgotPin": "Forgot PIN? Sign out",
+  "pinCreateTitle": "Create a 6-digit PIN",
+  "pinCreateSubtitle": "You will enter it to open the app.",
+  "pinConfirmTitle": "Enter the PIN again",
+  "pinMismatch": "The PINs did not match. Try again.",
+  "pinCurrentTitle": "Enter your current PIN",
+  "changePin": "Change PIN",
+  "pinChanged": "PIN changed",
+  "pinDelete": "Delete",
+  "pinDigitsEntered": "{entered} of {total} digits entered",
+  "@pinDigitsEntered": {
+    "placeholders": {
+      "entered": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  }
 }

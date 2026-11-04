@@ -6,6 +6,8 @@ import 'package:corestone/core/router/app_router.dart';
 import 'package:corestone/core/router/app_router.gr.dart';
 import 'package:corestone/core/theme/app_theme.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
+import 'package:corestone/features/app_lock/app_lock_cubit.dart';
+import 'package:corestone/features/app_lock/app_lock_gate.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
 import 'package:corestone/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -21,6 +23,8 @@ class App extends StatelessWidget {
       providers: [
         BlocProvider.value(value: sl<ThemeCubit>()),
         BlocProvider.value(value: sl<LocaleCubit>()),
+        BlocProvider.value(value: sl<SessionCubit>()),
+        BlocProvider.value(value: sl<AppLockCubit>()),
       ],
       child: Builder(
         builder: (context) => MaterialApp.router(
@@ -33,7 +37,6 @@ class App extends StatelessWidget {
           supportedLocales: AppLocalizations.supportedLocales,
           routerConfig: routerConfig,
           builder: (context, child) => BlocListener<SessionCubit, SessionState>(
-            bloc: sl<SessionCubit>(),
             listener: (context, state) => unawaited(
               sl<AppRouter>().replaceAll([
                 if (state is SessionAuthenticated)
@@ -42,7 +45,7 @@ class App extends StatelessWidget {
                   const LoginRoute(),
               ]),
             ),
-            child: child!,
+            child: AppLockGate(child: child!),
           ),
         ),
       ),

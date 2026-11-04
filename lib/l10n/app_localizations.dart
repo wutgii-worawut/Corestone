@@ -283,6 +283,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Delete my account'**
   String get deleteAccountConfirm;
+
+  /// No description provided for @lockTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your PIN'**
+  String get lockTitle;
+
+  /// No description provided for @wrongPin.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Wrong PIN. 1 try left before you are signed out.} other{Wrong PIN. {count} tries left before you are signed out.}}'**
+  String wrongPin(int count);
+
+  /// No description provided for @lockedOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Too many wrong PINs. Signing you out.'**
+  String get lockedOut;
+
+  /// No description provided for @forgotPin.
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot PIN? Sign out'**
+  String get forgotPin;
+
+  /// No description provided for @pinCreateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Create a 6-digit PIN'**
+  String get pinCreateTitle;
+
+  /// No description provided for @pinCreateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You will enter it to open the app.'**
+  String get pinCreateSubtitle;
+
+  /// No description provided for @pinConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the PIN again'**
+  String get pinConfirmTitle;
+
+  /// No description provided for @pinMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The PINs did not match. Try again.'**
+  String get pinMismatch;
+
+  /// No description provided for @pinCurrentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your current PIN'**
+  String get pinCurrentTitle;
+
+  /// No description provided for @changePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Change PIN'**
+  String get changePin;
+
+  /// No description provided for @pinChanged.
+  ///
+  /// In en, this message translates to:
+  /// **'PIN changed'**
+  String get pinChanged;
+
+  /// No description provided for @pinDelete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get pinDelete;
+
+  /// No description provided for @pinDigitsEntered.
+  ///
+  /// In en, this message translates to:
+  /// **'{entered} of {total} digits entered'**
+  String pinDigitsEntered(int entered, int total);
 }
 
 class _AppLocalizationsDelegate
