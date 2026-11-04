@@ -44,4 +44,63 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get signOut => 'ออกจากระบบ';
+
+  @override
+  String get loginTitle => 'ยินดีต้อนรับกลับมา';
+
+  @override
+  String get loginSubtitle => 'เข้าสู่ระบบด้วยอีเมลและรหัสผ่านของคุณ';
+
+  @override
+  String get email => 'อีเมล';
+
+  @override
+  String get password => 'รหัสผ่าน';
+
+  @override
+  String get showPassword => 'แสดงรหัสผ่าน';
+
+  @override
+  String get hidePassword => 'ซ่อนรหัสผ่าน';
+
+  @override
+  String get fieldRequired => 'กรุณากรอกข้อมูลช่องนี้';
+
+  @override
+  String get invalidEmail => 'กรุณากรอกอีเมลให้ถูกต้อง';
+
+  @override
+  String get loginWrongCredentials => 'อีเมลหรือรหัสผ่านไม่ถูกต้อง';
+
+  @override
+  String get errorOffline =>
+      'ไม่มีการเชื่อมต่ออินเทอร์เน็ต กรุณาตรวจสอบแล้วลองอีกครั้ง';
+
+  @override
+  String get errorServer => 'ระบบขัดข้อง กรุณาลองใหม่ภายหลัง';
+
+  @override
+  String get errorGeneric => 'เกิดข้อผิดพลาด กรุณาลองอีกครั้ง';
+
+  @override
+  String get signOutConfirmTitle => 'ต้องการออกจากระบบหรือไม่';
+
+  @override
+  String get signOutConfirmBody => 'คุณจะต้องเข้าสู่ระบบอีกครั้งเพื่อใช้งานแอป';
+
+  @override
+  String get cancel => 'ยกเลิก';
+
+  @override
+  String get deleteAccount => 'ลบบัญชี';
+
+  @override
+  String get deleteAccountTitle => 'ต้องการลบบัญชีของคุณหรือไม่';
+
+  @override
+  String get deleteAccountBody =>
+      'บัญชีและข้อมูลทั้งหมดของคุณจะถูกลบอย่างถาวร แล้วคุณจะออกจากระบบ การดำเนินการนี้ย้อนกลับไม่ได้';
+
+  @override
+  String get deleteAccountConfirm => 'ลบบัญชีของฉัน';
 }

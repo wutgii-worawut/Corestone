@@ -39,7 +39,7 @@ class App extends StatelessWidget {
                 if (state is SessionAuthenticated)
                   const HomeShellRoute()
                 else
-                  const SignInRoute(),
+                  const LoginRoute(),
               ]),
             ),
             child: child!,

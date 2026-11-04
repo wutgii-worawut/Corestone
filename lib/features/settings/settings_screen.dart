@@ -46,7 +46,13 @@ class SettingsScreen extends StatelessWidget {
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text(l10n.signOut),
-            onTap: () => unawaited(sl<SessionCubit>().signOut()),
+            onTap: () => unawaited(_confirmSignOut(context)),
+          ),
+          ListTile(
+            leading: const Icon(Icons.person_remove_outlined),
+            title: Text(l10n.deleteAccount),
+            onTap: () =>
+                unawaited(context.router.push(const DeleteAccountRoute())),
           ),
           if (kDebugMode)
             ListTile(
@@ -67,6 +73,28 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+Future<void> _confirmSignOut(BuildContext context) async {
+  final l10n = context.l10n;
+  final confirmed = await showDialog<bool>(
+    context: context,
+    builder: (context) => AlertDialog(
+      title: Text(l10n.signOutConfirmTitle),
+      content: Text(l10n.signOutConfirmBody),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(context, false),
+          child: Text(l10n.cancel),
+        ),
+        TextButton(
+          onPressed: () => Navigator.pop(context, true),
+          child: Text(l10n.signOut),
+        ),
+      ],
+    ),
+  );
+  if (confirmed ?? false) await sl<SessionCubit>().signOut();
 }
 
 Future<void> _callMe(BuildContext context) async {

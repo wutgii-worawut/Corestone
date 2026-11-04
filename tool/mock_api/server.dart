@@ -38,16 +38,23 @@ routes = {
     return (204, null);
   },
   'GET /me': (request) {
-    final auth = request.headers.value(HttpHeaders.authorizationHeader);
-    if (_access == null || auth != 'Bearer $_access') {
-      return (401, {'error': 'access token invalid'});
-    }
+    if (!_authorized(request)) return (401, {'error': 'access token invalid'});
     return (
       200,
       {'id': 'user-1', 'name': 'Mock User', 'email': 'mock.user@example.com'},
     );
   },
+  // The demo account comes back on the next sign-in, so lanes can rerun.
+  'DELETE /me': (request) {
+    if (!_authorized(request)) return (401, {'error': 'access token invalid'});
+    _revoke();
+    return (204, null);
+  },
 };
+
+bool _authorized(HttpRequest request) =>
+    _access != null &&
+    request.headers.value(HttpHeaders.authorizationHeader) == 'Bearer $_access';
 
 const demoEmail = 'demo@corestone.dev';
 const demoPassword = 'demo-password';

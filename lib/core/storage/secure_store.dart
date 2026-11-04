@@ -25,4 +25,6 @@ class SecureStore {
       _storage.write(key: key, value: value);
 
   Future<void> delete(String key) => _storage.delete(key: key);
+
+  Future<void> deleteAll() => _storage.deleteAll();
 }

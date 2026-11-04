@@ -45,6 +45,15 @@ void main() {
     await tester.pumpAndSettle();
     await tester.tap(find.text('Sign out'));
     await tester.pumpAndSettle();
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(_signIn, findsNothing);
+    expect(await sl<TokenStore>().read(), isNotNull);
+
+    await tester.tap(find.text('Sign out'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(TextButton, 'Sign out'));
+    await tester.pumpAndSettle();
     expect(_signIn, findsOneWidget);
     expect(await sl<TokenStore>().read(), isNull);
   });

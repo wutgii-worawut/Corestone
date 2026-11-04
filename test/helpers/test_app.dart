@@ -11,15 +11,19 @@ const testTokens = AuthTokens(accessToken: 'a', refreshToken: 'r');
 
 /// Registers the app on empty storage for the stage flavor and restores the
 /// session, as bootstrap does. Pair with `tearDown(sl.reset)`.
-Future<void> configureTestApp({bool signedIn = true}) async {
+Future<void> configureTestApp({
+  bool signedIn = true,
+  bool demoMode = false,
+}) async {
   SharedPreferencesAsyncPlatform.instance =
       InMemorySharedPreferencesAsync.empty();
   FlutterSecureStorage.setMockInitialValues({});
   configureDependencies(
-    const AppConfig(
+    AppConfig(
       flavor: AppFlavor.stage,
       apiBaseUrl: 'https://api-stage.example.com',
       certPins: [],
+      demoMode: demoMode,
     ),
   );
   if (signedIn) await sl<TokenStore>().write(testTokens);

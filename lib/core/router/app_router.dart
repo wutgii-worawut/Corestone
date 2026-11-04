@@ -21,6 +21,7 @@ class AppRouter extends RootStackRouter {
     ),
     AutoRoute(page: ChangeThemeRoute.page, guards: [_authGuard]),
     AutoRoute(page: ChangeLanguageRoute.page, guards: [_authGuard]),
-    AutoRoute(page: SignInRoute.page),
+    AutoRoute(page: DeleteAccountRoute.page, guards: [_authGuard]),
+    AutoRoute(page: LoginRoute.page),
   ];
 }

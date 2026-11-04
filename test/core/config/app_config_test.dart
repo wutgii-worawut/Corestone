@@ -91,4 +91,16 @@ void main() {
     expect(() => parse('stage'), throwsStateError);
     expect(() => parse('prod'), throwsStateError);
   });
+
+  test('DEMO_MODE is off by default and only allowed on dev', () {
+    AppConfig parse(String flavor, {String demo = 'true'}) => AppConfig.parse({
+      'APP_FLAVOR': flavor,
+      'API_BASE_URL': 'https://x',
+      'DEMO_MODE': demo,
+    });
+    expect(parse('dev', demo: '').demoMode, isFalse);
+    expect(parse('dev').demoMode, isTrue);
+    expect(() => parse('stage'), throwsStateError);
+    expect(() => parse('prod'), throwsStateError);
+  });
 }

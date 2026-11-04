@@ -7,8 +7,11 @@ import 'package:corestone/core/router/auth_guard.dart';
 import 'package:corestone/core/storage/prefs.dart';
 import 'package:corestone/core/storage/secure_store.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
+import 'package:corestone/features/auth/data/fake_auth_repository.dart';
+import 'package:corestone/features/auth/data/rest_account_repository.dart';
 import 'package:corestone/features/auth/data/rest_auth_repository.dart';
 import 'package:corestone/features/auth/data/token_store.dart';
+import 'package:corestone/features/auth/domain/account_repository.dart';
 import 'package:corestone/features/auth/domain/auth_repository.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
 import 'package:get_it/get_it.dart';
@@ -20,11 +23,14 @@ void configureDependencies(AppConfig config) {
   // Auth calls and retries skip the auth interceptor, so a 401 on refresh
   // cannot trigger another refresh.
   final authApi = ApiClient(config);
-  final tokens = TokenStore(SecureStore());
+  final secure = SecureStore();
+  final tokens = TokenStore(secure);
+  final demo = config.demoMode ? FakeAuthRepository() : null;
   sl
     ..registerSingleton<AppConfig>(config)
+    ..registerSingleton<SecureStore>(secure)
     ..registerSingleton<TokenStore>(tokens)
-    ..registerSingleton<AuthRepository>(RestAuthRepository(authApi))
+    ..registerSingleton<AuthRepository>(demo ?? RestAuthRepository(authApi))
     ..registerSingleton<ApiClient>(
       ApiClient(
         config,
@@ -38,6 +44,7 @@ void configureDependencies(AppConfig config) {
         ],
       ),
     )
+    ..registerSingleton<AccountRepository>(demo ?? RestAccountRepository(sl()))
     ..registerSingleton<Prefs>(Prefs(SharedPreferencesAsync()))
     ..registerSingleton<ThemeCubit>(
       ThemeCubit(sl()),
