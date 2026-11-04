@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:corestone/core/di/injection.dart';
 import 'package:corestone/core/locale/locale_cubit.dart';
 import 'package:corestone/core/router/app_router.dart';
+import 'package:corestone/core/router/app_router.gr.dart';
 import 'package:corestone/core/theme/app_theme.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
+import 'package:corestone/features/auth/session_cubit.dart';
 import 'package:corestone/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -28,6 +32,18 @@ class App extends StatelessWidget {
           localizationsDelegates: AppLocalizations.localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           routerConfig: routerConfig,
+          builder: (context, child) => BlocListener<SessionCubit, SessionState>(
+            bloc: sl<SessionCubit>(),
+            listener: (context, state) => unawaited(
+              sl<AppRouter>().replaceAll([
+                if (state is SessionAuthenticated)
+                  const HomeShellRoute()
+                else
+                  const SignInRoute(),
+              ]),
+            ),
+            child: child!,
+          ),
         ),
       ),
     );

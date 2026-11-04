@@ -1,26 +1,81 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 /// A local stand-in for the backend, for the dev flavor and lanes.
 ///
 /// Run `dart run tool/mock_api/server.dart [port]` (default 8080). The
 /// Android emulator reaches it at `http://10.0.2.2:8080`.
 ///
-/// `GET /__mock/next?status=503` makes the next API request answer with that
-/// status, so a lane can drive each failure.
+/// Controls for lanes:
+/// - `GET /__mock/next?status=503` makes the next API request answer with
+///   that status.
+/// - `GET /__mock/expire` invalidates the access token, so the next
+///   authorized call gets 401 and the app refreshes.
+/// - `GET /__mock/revoke` invalidates both tokens, so the refresh fails too.
 ///
-/// Each endpoint is one entry in [routes]. CS-07 adds `POST /auth/login` and
-/// `POST /auth/refresh`, CS-11 adds `POST /devices` and `DELETE /devices`,
-/// and CS-17 adds `POST /feedback`.
-final Map<String, Object? Function(HttpRequest request)> routes = {
-  'GET /me': (_) => {
-    'id': 'user-1',
-    'name': 'Mock User',
-    'email': 'mock.user@example.com',
+/// Each endpoint is one entry in [routes]. CS-11 adds `POST /devices` and
+/// `DELETE /devices`, and CS-17 adds `POST /feedback`.
+final Map<String, FutureOr<(int, Object?)> Function(HttpRequest request)>
+routes = {
+  'POST /auth/login': (request) async {
+    final body = await _body(request);
+    if (body['email'] != demoEmail || body['password'] != demoPassword) {
+      return (401, {'error': 'wrong email or password'});
+    }
+    return (200, _issue());
+  },
+  'POST /auth/refresh': (request) async {
+    final token = (await _body(request))['refreshToken'];
+    if (_refresh == null || token != _refresh) {
+      return (401, {'error': 'refresh token invalid'});
+    }
+    return (200, _issue());
+  },
+  'POST /auth/logout': (request) async {
+    if ((await _body(request))['refreshToken'] == _refresh) _revoke();
+    return (204, null);
+  },
+  'GET /me': (request) {
+    final auth = request.headers.value(HttpHeaders.authorizationHeader);
+    if (_access == null || auth != 'Bearer $_access') {
+      return (401, {'error': 'access token invalid'});
+    }
+    return (
+      200,
+      {'id': 'user-1', 'name': 'Mock User', 'email': 'mock.user@example.com'},
+    );
   },
 };
 
+const demoEmail = 'demo@corestone.dev';
+const demoPassword = 'demo-password';
+
+String? _access;
+String? _refresh;
+final _random = Random.secure();
+
+Map<String, String> _issue() {
+  String token(String kind) {
+    final hex = List.generate(16, (_) => _random.nextInt(16).toRadixString(16));
+    return 'mock-$kind-${hex.join()}';
+  }
+
+  _access = token('access');
+  _refresh = token('refresh');
+  return {'accessToken': _access!, 'refreshToken': _refresh!};
+}
+
+void _revoke() => _access = _refresh = null;
+
+Future<Map<String, Object?>> _body(HttpRequest request) async {
+  final decoded = jsonDecode(await utf8.decodeStream(request));
+  return decoded is Map<String, Object?> ? decoded : const {};
+}
+
 Future<HttpServer> startMockServer({int port = 8080}) async {
+  _revoke();
   final server = await HttpServer.bind(InternetAddress.loopbackIPv4, port);
   int? nextStatus;
   server.listen((request) async {
@@ -29,11 +84,22 @@ Future<HttpServer> startMockServer({int port = 8080}) async {
     if (uri.path == '/__mock/next') {
       nextStatus = int.tryParse(uri.queryParameters['status'] ?? '');
       response.statusCode = nextStatus == null ? 400 : 204;
+    } else if (uri.path == '/__mock/expire') {
+      _access = null;
+      response.statusCode = 204;
+    } else if (uri.path == '/__mock/revoke') {
+      _revoke();
+      response.statusCode = 204;
     } else if (nextStatus case final status?) {
       nextStatus = null;
       _json(response, status, {'error': 'forced $status'});
     } else if (routes['${request.method} ${uri.path}'] case final route?) {
-      _json(response, 200, route(request));
+      try {
+        final (status, body) = await route(request);
+        _json(response, status, body);
+      } on FormatException {
+        _json(response, 400, {'error': 'body is not JSON'});
+      }
     } else {
       _json(response, 404, {'error': 'no route'});
     }
