@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Drives the app on a running Android emulator for verification lanes.
 # Usage:
-#   tool/lanes/android.sh launch [flavor]   build, install, launch, wait for first frame
+#   tool/lanes/android.sh launch [flavor]   (default dev) build, install, launch, wait for first frame
 #   tool/lanes/android.sh shot <file.png>   save a screenshot
 #   tool/lanes/android.sh log               dump flutter logcat lines
 set -euo pipefail
 
 cmd="${1:?usage: android.sh launch|shot|log}"
-flavor="${2:-}"
+flavor="${2:-dev}"
 out_dir="${LANE_OUT:-/tmp/lanes}"
 mkdir -p "$out_dir"
 
@@ -27,7 +27,7 @@ case "$cmd" in
     args=(build apk --debug)
     [ -n "$flavor" ] && args+=(--flavor "$flavor" "--dart-define-from-file=config/$flavor.json")
     ${FLUTTER:-fvm flutter} "${args[@]}"
-    apk="$(ls -t build/app/outputs/flutter-apk/*.apk | head -1)"
+    apk="build/app/outputs/flutter-apk/app${flavor:+-$flavor}-debug.apk"
     adb install -r "$apk" >/dev/null
     for _ in $(seq 1 30); do
       adb shell cmd package resolve-activity --brief "$(app_id)" | grep -q MainActivity && break
