@@ -7,12 +7,11 @@ void main() {
       final config = AppConfig.parse({
         'APP_FLAVOR': flavor.name,
         'API_BASE_URL': 'https://api-${flavor.name}.example.com',
-        'CERT_SHA256': 'abc',
+        'CERT_SHA256': '',
       });
 
       expect(config.flavor, flavor);
       expect(config.apiBaseUrl, 'https://api-${flavor.name}.example.com');
-      expect(config.certSha256, 'abc');
     });
   }
 
@@ -55,6 +54,41 @@ void main() {
       'API_BASE_URL': 'https://api.example.com',
     });
 
-    expect(config.certSha256, isEmpty);
+    expect(config.certPins, isEmpty);
+  });
+
+  AppConfig withPins(String raw) => AppConfig.parse({
+    'APP_FLAVOR': 'prod',
+    'API_BASE_URL': 'https://api.example.com',
+    'CERT_SHA256': raw,
+  });
+
+  test('CERT_SHA256 holds comma-separated pins, normalized', () {
+    final a = 'a' * 64;
+    final b = 'B' * 64;
+    final bWithColons = [for (var i = 0; i < 64; i += 2) b.substring(i, i + 2)]
+        .join(':');
+
+    expect(withPins(' $a , $bWithColons ,').certPins, [a, 'b' * 64]);
+  });
+
+  test('a malformed pin names itself', () {
+    expect(
+      () => withPins('abc'),
+      throwsA(
+        isA<StateError>().having((e) => e.message, 'message', contains('abc')),
+      ),
+    );
+  });
+
+  test('only dev may use an http API_BASE_URL', () {
+    AppConfig parse(String flavor) => AppConfig.parse({
+      'APP_FLAVOR': flavor,
+      'API_BASE_URL': 'http://10.0.2.2:8080',
+    });
+
+    expect(parse('dev').apiBaseUrl, 'http://10.0.2.2:8080');
+    expect(() => parse('stage'), throwsStateError);
+    expect(() => parse('prod'), throwsStateError);
   });
 }

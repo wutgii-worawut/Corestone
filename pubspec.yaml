@@ -43,6 +43,8 @@ dependencies:
   flutter_localizations:
     sdk: flutter
   intl: ^0.20.3
+  dio: ^5.11.1
+  crypto: ^3.0.8
 
 dev_dependencies:
   flutter_test:

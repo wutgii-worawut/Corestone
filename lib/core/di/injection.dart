@@ -1,5 +1,6 @@
 import 'package:corestone/core/config/app_config.dart';
 import 'package:corestone/core/locale/locale_cubit.dart';
+import 'package:corestone/core/network/api_client.dart';
 import 'package:corestone/core/router/app_router.dart';
 import 'package:corestone/core/storage/prefs.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
@@ -11,6 +12,7 @@ final sl = GetIt.instance;
 void configureDependencies(AppConfig config) {
   sl
     ..registerSingleton<AppConfig>(config)
+    ..registerSingleton<ApiClient>(ApiClient(config))
     ..registerSingleton<Prefs>(Prefs(SharedPreferencesAsync()))
     ..registerSingleton<ThemeCubit>(
       ThemeCubit(sl()),
