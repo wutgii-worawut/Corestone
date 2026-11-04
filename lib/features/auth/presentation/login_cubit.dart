@@ -1,6 +1,7 @@
 import 'package:corestone/core/submit_status.dart';
 import 'package:corestone/core/validators/validators.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
+import 'package:corestone/features/system/system_pages.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -42,9 +43,11 @@ final class LoginState extends Equatable {
 /// Owns the form. A success signs in through [SessionCubit], and `App` then
 /// moves to Home.
 class LoginCubit extends Cubit<LoginState> {
-  LoginCubit(this._session) : super(const LoginState());
+  LoginCubit(this._session, {this._guard = unguarded})
+    : super(const LoginState());
 
   final SessionCubit _session;
+  final Guard _guard;
 
   void emailChanged(String email) =>
       emit(state.copyWith(email: email, status: _statusAfterEdit));
@@ -65,9 +68,8 @@ class LoginCubit extends Cubit<LoginState> {
       return emit(state.copyWith(showErrors: true));
     }
     emit(state.copyWith(showErrors: true, status: const Submitting()));
-    final result = await _session.signIn(
-      email: email,
-      password: state.password,
+    final result = await _guard(
+      () => _session.signIn(email: email, password: state.password),
     );
     if (isClosed) return;
     emit(

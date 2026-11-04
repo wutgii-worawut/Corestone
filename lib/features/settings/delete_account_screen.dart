@@ -5,21 +5,24 @@ import 'package:corestone/core/submit_status.dart';
 import 'package:corestone/core/widgets/app_button.dart';
 import 'package:corestone/features/auth/domain/account_repository.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
+import 'package:corestone/features/system/system_pages.dart';
 import 'package:corestone/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 /// Deletes the account, then signs out, and `App` moves to login.
 class DeleteAccountCubit extends Cubit<SubmitStatus> {
-  DeleteAccountCubit(this._account, this._session) : super(const SubmitIdle());
+  DeleteAccountCubit(this._account, this._session, {this._guard = unguarded})
+    : super(const SubmitIdle());
 
   final AccountRepository _account;
   final SessionCubit _session;
+  final Guard _guard;
 
   Future<void> delete() async {
     if (state is Submitting) return;
     emit(const Submitting());
-    final result = await _account.deleteAccount();
+    final result = await _guard(_account.deleteAccount);
     await result.fold((failure) async => emit(SubmitFailed(failure)), (
       _,
     ) async {
@@ -39,7 +42,8 @@ class DeleteAccountScreen extends StatelessWidget {
     final l10n = context.l10n;
     final theme = Theme.of(context);
     return BlocProvider(
-      create: (_) => DeleteAccountCubit(sl(), sl()),
+      create: (_) =>
+          DeleteAccountCubit(sl(), sl(), guard: sl<SystemPages>().guard),
       child: Scaffold(
         appBar: AppBar(title: Text(l10n.deleteAccount)),
         body: BlocBuilder<DeleteAccountCubit, SubmitStatus>(

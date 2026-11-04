@@ -23,6 +23,9 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: ChangeLanguageRoute.page, guards: [_authGuard]),
     AutoRoute(page: DeleteAccountRoute.page, guards: [_authGuard]),
     AutoRoute(page: ChangePinRoute.page, guards: [_authGuard]),
+    // Unguarded, so a failed sign-in can show it over login. It still sits
+    // under AppLockGate, which stays topmost.
+    AutoRoute(page: SystemRoute.page),
     // No transition, so a sign-out never animates app content out from
     // under the lock.
     CustomRoute<void>(

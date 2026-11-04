@@ -63,5 +63,11 @@
   },
   "biometricUnlock": "Unlock with biometrics",
   "biometricReason": "Confirm it is you to open the app",
-  "biometricUsePin": "Use PIN"
+  "biometricUsePin": "Use PIN",
+  "retry": "Try again",
+  "maintenanceTitle": "Down for maintenance",
+  "maintenanceBody": "We're improving the service right now. Try again in a little while.",
+  "secureConnectionTitle": "Can't connect securely",
+  "secureConnectionBody": "We couldn't verify the server, so we stopped to keep your data safe. If you're on public Wi-Fi, switch networks and try again.",
+  "offlineBanner": "No network connection"
 }

@@ -7,6 +7,7 @@ import 'package:corestone/core/validators/validators.dart';
 import 'package:corestone/core/widgets/app_button.dart';
 import 'package:corestone/features/auth/presentation/login_cubit.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
+import 'package:corestone/features/system/system_pages.dart';
 import 'package:corestone/l10n/app_localizations.dart';
 import 'package:corestone/l10n/l10n.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,8 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => LoginCubit(sl<SessionCubit>()),
+      create: (_) =>
+          LoginCubit(sl<SessionCubit>(), guard: sl<SystemPages>().guard),
       child: const LoginView(),
     );
   }

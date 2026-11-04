@@ -46,5 +46,11 @@
   "pinDigitsEntered": "กรอกแล้ว {entered} จาก {total} หลัก",
   "biometricUnlock": "ปลดล็อกด้วยไบโอเมตริก",
   "biometricReason": "ยืนยันตัวตนเพื่อเปิดแอป",
-  "biometricUsePin": "ใช้ PIN"
+  "biometricUsePin": "ใช้ PIN",
+  "retry": "ลองอีกครั้ง",
+  "maintenanceTitle": "ปิดปรับปรุงระบบชั่วคราว",
+  "maintenanceBody": "ขณะนี้เรากำลังปรับปรุงบริการ โปรดลองอีกครั้งในอีกสักครู่",
+  "secureConnectionTitle": "เชื่อมต่ออย่างปลอดภัยไม่ได้",
+  "secureConnectionBody": "เรายืนยันเซิร์ฟเวอร์ไม่ได้ จึงหยุดการเชื่อมต่อเพื่อปกป้องข้อมูลของคุณ หากใช้ Wi-Fi สาธารณะ ให้เปลี่ยนเครือข่ายแล้วลองอีกครั้ง",
+  "offlineBanner": "ไม่มีการเชื่อมต่อเครือข่าย"
 }

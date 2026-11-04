@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:corestone/core/di/injection.dart';
 import 'package:corestone/core/locale/locale_cubit.dart';
+import 'package:corestone/core/network/connectivity_banner.dart';
+import 'package:corestone/core/network/connectivity_cubit.dart';
 import 'package:corestone/core/router/app_router.dart';
 import 'package:corestone/core/router/app_router.gr.dart';
 import 'package:corestone/core/theme/app_theme.dart';
@@ -25,6 +27,7 @@ class App extends StatelessWidget {
         BlocProvider.value(value: sl<LocaleCubit>()),
         BlocProvider.value(value: sl<SessionCubit>()),
         BlocProvider.value(value: sl<AppLockCubit>()),
+        BlocProvider.value(value: sl<ConnectivityCubit>()),
       ],
       child: Builder(
         builder: (context) => MaterialApp.router(
@@ -45,7 +48,8 @@ class App extends StatelessWidget {
                   const LoginRoute(),
               ]),
             ),
-            child: AppLockGate(child: child!),
+            // Outside the gate, so the lock screen shows it too.
+            child: ConnectivityBanner(child: AppLockGate(child: child!)),
           ),
         ),
       ),

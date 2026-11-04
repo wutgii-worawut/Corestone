@@ -379,6 +379,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Use PIN'**
   String get biometricUsePin;
+
+  /// No description provided for @retry.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get retry;
+
+  /// No description provided for @maintenanceTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Down for maintenance'**
+  String get maintenanceTitle;
+
+  /// No description provided for @maintenanceBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re improving the service right now. Try again in a little while.'**
+  String get maintenanceBody;
+
+  /// No description provided for @secureConnectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Can\'t connect securely'**
+  String get secureConnectionTitle;
+
+  /// No description provided for @secureConnectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn\'t verify the server, so we stopped to keep your data safe. If you\'re on public Wi-Fi, switch networks and try again.'**
+  String get secureConnectionBody;
+
+  /// No description provided for @offlineBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'No network connection'**
+  String get offlineBanner;
 }
 
 class _AppLocalizationsDelegate

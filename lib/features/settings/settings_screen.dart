@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:corestone/core/di/injection.dart';
+import 'package:corestone/core/errors/failure_message.dart';
 import 'package:corestone/core/locale/locale_cubit.dart';
 import 'package:corestone/core/network/api_client.dart';
 import 'package:corestone/core/router/app_router.gr.dart';
@@ -10,6 +11,7 @@ import 'package:corestone/features/app_lock/app_lock_cubit.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
 import 'package:corestone/features/settings/change_language_screen.dart';
 import 'package:corestone/features/settings/change_theme_screen.dart';
+import 'package:corestone/features/system/system_pages.dart';
 import 'package:corestone/l10n/l10n.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -148,13 +150,18 @@ Future<void> _confirmSignOut(BuildContext context) async {
 
 Future<void> _callMe(BuildContext context) async {
   final messenger = ScaffoldMessenger.of(context);
-  final result = await sl<ApiClient>().get(
-    '/me',
-    parse: (json) => (json! as Map<String, Object?>)['name']! as String,
+  final l10n = context.l10n;
+  final result = await sl<SystemPages>().guard(
+    () => sl<ApiClient>().get(
+      '/me',
+      parse: (json) => (json! as Map<String, Object?>)['name']! as String,
+    ),
   );
   messenger.showSnackBar(
     SnackBar(
-      content: Text(result.fold((failure) => '$failure', (name) => 'OK $name')),
+      content: Text(
+        result.fold((f) => failureMessage(l10n, f), (name) => 'OK $name'),
+      ),
     ),
   );
 }
