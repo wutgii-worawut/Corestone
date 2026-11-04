@@ -3,21 +3,12 @@
 # analyzes, tests and builds it for Android. Exits non-zero on any failure.
 # Usage: tool/template_smoke.sh
 # The copy is HEAD plus uncommitted edits to tracked files; untracked files
-# are left out. iOS is not built. Uses the fvm-pinned SDK in .fvm/flutter_sdk
-# as tool/run_patrol.sh does; FLUTTER overrides it.
+# are left out. iOS is not built. Uses the SDK .fvmrc pins (see tool/sdk.sh);
+# FLUTTER overrides it.
 set -u
 
 repo="$(cd "$(dirname "$0")/.." && pwd)"
-if [ -z "${FLUTTER:-}" ]; then
-  FLUTTER=flutter
-  if [ -d "$repo/.fvm/flutter_sdk" ]; then
-    if [ "${OS:-}" = Windows_NT ]; then
-      FLUTTER="$(cd "$repo/.fvm/flutter_sdk" && pwd -W)/bin/flutter.bat"
-    else
-      FLUTTER="$(cd "$repo/.fvm/flutter_sdk" && pwd -P)/bin/flutter"
-    fi
-  fi
-fi
+. "$repo/tool/sdk.sh"
 dart="${FLUTTER%flutter*}dart${FLUTTER##*flutter}"
 
 tmp="$(mktemp -d)"
