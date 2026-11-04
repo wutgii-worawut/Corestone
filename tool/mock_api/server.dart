@@ -14,6 +14,7 @@ import 'dart:math';
 /// - `GET /__mock/expire` invalidates the access token, so the next
 ///   authorized call gets 401 and the app refreshes.
 /// - `GET /__mock/revoke` invalidates both tokens, so the refresh fails too.
+/// - `GET /__mock/quit` stops the server, for tool/run_patrol.sh.
 ///
 /// Each endpoint is one entry in [routes].
 final Map<String, FutureOr<(int, Object?)> Function(HttpRequest request)>
@@ -133,6 +134,11 @@ Future<HttpServer> startMockServer({int port = 8080}) async {
     } else if (uri.path == '/__mock/revoke') {
       _revoke();
       response.statusCode = 204;
+    } else if (uri.path == '/__mock/quit') {
+      response.statusCode = 204;
+      await response.close();
+      await server.close(force: true);
+      return;
     } else if (nextStatus case final status?) {
       nextStatus = null;
       _json(response, status, {'error': 'forced $status'});

@@ -70,6 +70,7 @@ dev_dependencies:
   build_runner: ^2.16.1
   alchemist: ^0.14.1
   bloc_test: ^10.0.0
+  patrol: ^4.11.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -97,3 +98,13 @@ flutter:
     - family: NotoSansThai
       fonts:
         - asset: assets/fonts/NotoSansThai/NotoSansThai-Variable.ttf
+
+# patrol_cli reads this. Run the suite with tool/run_patrol.sh.
+patrol:
+  app_name: Corestone Dev
+  test_directory: integration_test
+  flavor: dev
+  android:
+    package_name: com.wutstack.corestone.dev
+  ios:
+    bundle_id: com.wutstack.corestone.dev
