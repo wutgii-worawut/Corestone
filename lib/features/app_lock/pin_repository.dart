@@ -25,8 +25,9 @@ class PinRepository {
 
   static const key = 'app_pin';
 
-  /// Measured on the Pixel 5 emulator in CS-09 to keep unlock under 400 ms.
-  static const defaultIterations = 100000;
+  /// Unlock took a 337 ms median on the Pixel 5 emulator in CS-09, under the
+  /// 400 ms budget. Re-measure on a low-end phone before raising it.
+  static const defaultIterations = 150000;
 
   final SecureStore _store;
   final PinHasher _derive;
