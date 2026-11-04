@@ -79,6 +79,14 @@ void main() {
     expect((await send('POST', '/auth/refresh', body: refresh)).$1, 401);
   });
 
+  test('DELETE /me needs the token and ends the session', () async {
+    final tokens = await login();
+    expect((await send('DELETE', '/me')).$1, 401);
+    final access = tokens['accessToken']! as String;
+    expect((await send('DELETE', '/me', bearer: access)).$1, 204);
+    expect((await send('GET', '/me', bearer: access)).$1, 401);
+  });
+
   test('revoke makes the refresh fail', () async {
     final tokens = await login();
     await send('GET', '/__mock/revoke');

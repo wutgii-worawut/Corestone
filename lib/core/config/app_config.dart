@@ -5,6 +5,7 @@ class AppConfig {
     required this.flavor,
     required this.apiBaseUrl,
     required this.certPins,
+    this.demoMode = false,
     this.apiTimeout = const Duration(seconds: 15),
   });
 
@@ -12,6 +13,7 @@ class AppConfig {
     'APP_FLAVOR': String.fromEnvironment('APP_FLAVOR'),
     'API_BASE_URL': String.fromEnvironment('API_BASE_URL'),
     'CERT_SHA256': String.fromEnvironment('CERT_SHA256'),
+    'DEMO_MODE': String.fromEnvironment('DEMO_MODE'),
   });
 
   factory AppConfig.parse(Map<String, String> env) {
@@ -29,10 +31,15 @@ class AppConfig {
     if (flavor != AppFlavor.dev && Uri.parse(apiBaseUrl).scheme != 'https') {
       throw StateError('API_BASE_URL must be https for ${flavor.name}.');
     }
+    final demoMode = env['DEMO_MODE'] == 'true';
+    if (demoMode && flavor != AppFlavor.dev) {
+      throw StateError('DEMO_MODE is only for dev, not ${flavor.name}.');
+    }
     return AppConfig(
       flavor: flavor,
       apiBaseUrl: apiBaseUrl,
       certPins: _parsePins(env['CERT_SHA256'] ?? ''),
+      demoMode: demoMode,
     );
   }
 
@@ -43,6 +50,10 @@ class AppConfig {
   /// comma-separated `CERT_SHA256` key. Empty means pinning is off. List the
   /// next certificate's pin too before you rotate it.
   final List<String> certPins;
+
+  /// Signs in and deletes accounts against an in-memory fake instead of the
+  /// API, so the template runs with no backend. Dev only.
+  final bool demoMode;
 
   /// Connect and receive timeout for every API call.
   final Duration apiTimeout;

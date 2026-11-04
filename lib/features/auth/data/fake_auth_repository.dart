@@ -1,14 +1,22 @@
 import 'package:corestone/core/errors/failure.dart';
 import 'package:corestone/core/typedef.dart';
+import 'package:corestone/features/auth/domain/account_repository.dart';
 import 'package:corestone/features/auth/domain/auth_repository.dart';
 import 'package:corestone/features/auth/domain/auth_tokens.dart';
 import 'package:dartz/dartz.dart';
 
-/// An in-memory backend for demos and tests. Any credentials sign in, and
-/// only the latest refresh token can refresh.
-class FakeAuthRepository implements AuthRepository {
+/// An in-memory backend for demo mode and tests. Any credentials sign in,
+/// and only the latest refresh token can refresh.
+class FakeAuthRepository implements AuthRepository, AccountRepository {
   int _issued = 0;
   String? _validRefresh;
+
+  /// Makes every sign-in fail with this, such as [UnauthorizedFailure] for a
+  /// wrong password.
+  Failure? signInFailure;
+
+  /// Makes account deletion fail with this.
+  Failure? deleteFailure;
 
   /// Makes every refresh fail with this, such as [UnauthorizedFailure] for a
   /// revoked session or [NetworkFailure] for no connection.
@@ -19,6 +27,7 @@ class FakeAuthRepository implements AuthRepository {
 
   int refreshCalls = 0;
   int signOutCalls = 0;
+  int deleteCalls = 0;
 
   AuthTokens issue() {
     _issued++;
@@ -34,7 +43,10 @@ class FakeAuthRepository implements AuthRepository {
   ResultFuture<AuthTokens> signIn({
     required String email,
     required String password,
-  }) async => Right(issue());
+  }) async {
+    if (signInFailure case final failure?) return Left(failure);
+    return Right(issue());
+  }
 
   @override
   ResultFuture<AuthTokens> refresh(String refreshToken) async {
@@ -48,6 +60,14 @@ class FakeAuthRepository implements AuthRepository {
   @override
   ResultVoid signOut(String refreshToken) async {
     signOutCalls++;
+    _validRefresh = null;
+    return const Right(null);
+  }
+
+  @override
+  ResultVoid deleteAccount() async {
+    deleteCalls++;
+    if (deleteFailure case final failure?) return Left(failure);
     _validRefresh = null;
     return const Right(null);
   }
