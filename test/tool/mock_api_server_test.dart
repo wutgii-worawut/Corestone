@@ -22,7 +22,7 @@ void main() {
     if (bearer != null) {
       request.headers.set(HttpHeaders.authorizationHeader, 'Bearer $bearer');
     }
-    if (body != null) request.write(jsonEncode(body));
+    if (body != null) request.add(utf8.encode(jsonEncode(body)));
     final response = await request.close();
     final text = await utf8.decodeStream(response);
     return (response.statusCode, text.isEmpty ? null : jsonDecode(text));
@@ -106,6 +106,22 @@ void main() {
       expect((await send('GET', '/nope')).$1, status);
       expect((await send('GET', '/nope')).$1, 404);
     }
+  });
+
+  test('feedback needs a session, a rating and a message', () async {
+    final access = (await login())['accessToken']! as String;
+    const body = {'rating': 4, 'message': 'ดีมาก', 'locale': 'th'};
+    expect((await send('POST', '/feedback', body: body)).$1, 401);
+    final empty = await send(
+      'POST',
+      '/feedback',
+      body: {'rating': 0, 'message': ' '},
+      bearer: access,
+    );
+    expect(empty.$1, 400);
+    final sent = await send('POST', '/feedback', body: body, bearer: access);
+    expect(sent.$1, 204);
+    expect(feedback, [body]);
   });
 
   test('devices register and unregister only with a session', () async {

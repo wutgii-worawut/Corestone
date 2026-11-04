@@ -1,5 +1,11 @@
 enum AppFlavor { dev, stage, prod }
 
+/// The pubspec `version`, which `flutter run` and `flutter build` pass as
+/// these defines, so it cannot drift from the store version.
+const appVersion =
+    '${String.fromEnvironment('FLUTTER_BUILD_NAME')}'
+    '+${String.fromEnvironment('FLUTTER_BUILD_NUMBER')}';
+
 class AppConfig {
   const AppConfig({
     required this.flavor,
@@ -61,8 +67,8 @@ class AppConfig {
   /// next certificate's pin too before you rotate it.
   final List<String> certPins;
 
-  /// Signs in and deletes accounts against an in-memory fake instead of the
-  /// API, so the template runs with no backend. Dev only.
+  /// Signs in, deletes accounts and sends feedback against an in-memory fake
+  /// instead of the API, so the template runs with no backend. Dev only.
   final bool demoMode;
 
   /// The https host this flavor's App Links and Universal Links use, from

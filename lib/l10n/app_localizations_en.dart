@@ -183,4 +183,46 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get offlineBanner => 'No network connection';
+
+  @override
+  String get sendFeedback => 'Send feedback';
+
+  @override
+  String get feedbackIntro =>
+      'Tell us how the app works for you. We read every message.';
+
+  @override
+  String get feedbackRatingLabel => 'Rate your experience';
+
+  @override
+  String feedbackStars(int rating, int max) {
+    return '$rating of $max stars';
+  }
+
+  @override
+  String get feedbackRatingRequired => 'Choose a rating.';
+
+  @override
+  String get feedbackMessageLabel => 'Your feedback';
+
+  @override
+  String get feedbackMessageHint =>
+      'What works well, and what could be better?';
+
+  @override
+  String feedbackMessageTooLong(int max) {
+    return 'Keep it to $max characters or fewer.';
+  }
+
+  @override
+  String get feedbackSubmit => 'Send';
+
+  @override
+  String get feedbackThanksTitle => 'Thanks for your feedback';
+
+  @override
+  String get feedbackThanksBody => 'It helps us make the app better.';
+
+  @override
+  String get feedbackBackToSettings => 'Back to Settings';
 }

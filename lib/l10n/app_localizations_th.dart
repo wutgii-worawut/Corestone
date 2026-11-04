@@ -180,4 +180,46 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get offlineBanner => 'ไม่มีการเชื่อมต่อเครือข่าย';
+
+  @override
+  String get sendFeedback => 'ส่งความคิดเห็น';
+
+  @override
+  String get feedbackIntro =>
+      'บอกเราว่าแอปนี้ใช้งานเป็นอย่างไรบ้าง เราอ่านทุกข้อความ';
+
+  @override
+  String get feedbackRatingLabel => 'ให้คะแนนประสบการณ์ของคุณ';
+
+  @override
+  String feedbackStars(int rating, int max) {
+    return '$rating จาก $max ดาว';
+  }
+
+  @override
+  String get feedbackRatingRequired => 'โปรดเลือกคะแนน';
+
+  @override
+  String get feedbackMessageLabel => 'ความคิดเห็นของคุณ';
+
+  @override
+  String get feedbackMessageHint => 'อะไรที่ใช้งานได้ดี และอะไรที่ควรปรับปรุง';
+
+  @override
+  String feedbackMessageTooLong(int max) {
+    return 'โปรดเขียนไม่เกิน $max ตัวอักษร';
+  }
+
+  @override
+  String get feedbackSubmit => 'ส่ง';
+
+  @override
+  String get feedbackThanksTitle => 'ขอบคุณสำหรับความคิดเห็น';
+
+  @override
+  String get feedbackThanksBody =>
+      'ความคิดเห็นของคุณช่วยให้เราพัฒนาแอปให้ดีขึ้น';
+
+  @override
+  String get feedbackBackToSettings => 'กลับไปที่การตั้งค่า';
 }
