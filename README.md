@@ -16,7 +16,7 @@ into a fresh Flutter scaffold. See `NOTICE` for attribution.
 fvm flutter pub get
 fvm flutter analyze
 fvm flutter test
-fvm flutter run
+fvm flutter run --flavor dev --dart-define-from-file=config/dev.json
 ```
 
 ## Verification lanes
@@ -26,7 +26,7 @@ simulator and save screenshots. Reviewers and agents use them to check each chan
 on a real device.
 
 ```sh
-tool/lanes/android.sh launch
+tool/lanes/android.sh launch dev
 tool/lanes/android.sh shot home.png
 ```
 

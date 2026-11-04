@@ -1,0 +1,5 @@
+{
+  "APP_FLAVOR": "dev",
+  "API_BASE_URL": "https://api-dev.example.com",
+  "CERT_SHA256": ""
+}

@@ -29,6 +29,28 @@ android {
         versionName = flutter.versionName
     }
 
+    buildFeatures {
+        resValues = true
+    }
+
+    flavorDimensions += "env"
+    productFlavors {
+        create("dev") {
+            dimension = "env"
+            applicationIdSuffix = ".dev"
+            resValue("string", "app_name", "Corestone Dev")
+        }
+        create("stage") {
+            dimension = "env"
+            applicationIdSuffix = ".stage"
+            resValue("string", "app_name", "Corestone Stage")
+        }
+        create("prod") {
+            dimension = "env"
+            resValue("string", "app_name", "Corestone")
+        }
+    }
+
     buildTypes {
         release {
             // TODO: Add your own signing config for the release build.
