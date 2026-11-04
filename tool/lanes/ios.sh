@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # Drives the app on a booted iOS simulator for verification lanes. macOS only.
 # Usage:
-#   tool/lanes/ios.sh launch [flavor]   build for the simulator, install, launch
+#   tool/lanes/ios.sh launch [flavor]   (default dev) build for the simulator, install, launch
 #   tool/lanes/ios.sh shot <file.png>   save a screenshot
 #   tool/lanes/ios.sh log               stream the last minute of app logs
 set -euo pipefail
 
 cmd="${1:?usage: ios.sh launch|shot|log}"
-flavor="${2:-}"
+flavor="${2:-dev}"
 out_dir="${LANE_OUT:-/tmp/lanes}"
 mkdir -p "$out_dir"
 

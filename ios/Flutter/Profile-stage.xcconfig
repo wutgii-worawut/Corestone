@@ -1,0 +1,3 @@
+#include "Release.xcconfig"
+APP_DISPLAY_NAME = Corestone Stage
+PRODUCT_BUNDLE_IDENTIFIER = com.wutstack.corestone.stage

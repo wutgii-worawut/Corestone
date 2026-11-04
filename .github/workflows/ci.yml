@@ -47,7 +47,8 @@ jobs:
           flutter-version-file: .fvmrc
           cache: true
       - run: flutter --version
-      - run: flutter build apk --debug
+      - run: flutter build apk --debug --flavor dev --dart-define-from-file=config/dev.json
+      - run: flutter build apk --debug --flavor prod --dart-define-from-file=config/prod.json
       - uses: actions/upload-artifact@v4
         with:
           name: android-debug-apk
@@ -61,5 +62,7 @@ jobs:
         with:
           flutter-version-file: .fvmrc
           cache: true
-      - run: flutter build ios --no-codesign --debug --simulator
-      - run: flutter build ios --no-codesign
+      - run: flutter build ios --no-codesign --debug --simulator --flavor dev --dart-define-from-file=config/dev.json
+      - run: flutter build ios --no-codesign --flavor dev --dart-define-from-file=config/dev.json
+      - run: flutter build ios --no-codesign --flavor stage --dart-define-from-file=config/stage.json
+      - run: /usr/libexec/PlistBuddy -c "Print :CFBundleIdentifier" -c "Print :CFBundleDisplayName" build/ios/iphoneos/Runner.app/Info.plist

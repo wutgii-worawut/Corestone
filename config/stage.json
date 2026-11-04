@@ -1,0 +1,5 @@
+{
+  "APP_FLAVOR": "stage",
+  "API_BASE_URL": "https://api-stage.example.com",
+  "CERT_SHA256": ""
+}

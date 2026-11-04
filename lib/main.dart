@@ -1,11 +1,14 @@
+import 'package:corestone/core/config/app_config.dart';
 import 'package:flutter/material.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp(config: AppConfig.fromEnvironment()));
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, required this.config});
+
+  final AppConfig config;
 
   // This widget is the root of your application.
   @override
@@ -30,7 +33,7 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: .fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: MyHomePage(title: 'Corestone ${config.flavor.name}'),
     );
   }
 }
