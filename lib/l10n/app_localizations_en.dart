@@ -105,4 +105,53 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAccountConfirm => 'Delete my account';
+
+  @override
+  String get lockTitle => 'Enter your PIN';
+
+  @override
+  String wrongPin(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'Wrong PIN. $count tries left before you are signed out.',
+      one: 'Wrong PIN. 1 try left before you are signed out.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get lockedOut => 'Signing you out…';
+
+  @override
+  String get forgotPin => 'Forgot PIN? Sign out';
+
+  @override
+  String get pinCreateTitle => 'Create a 6-digit PIN';
+
+  @override
+  String get pinCreateSubtitle => 'You will enter it to open the app.';
+
+  @override
+  String get pinConfirmTitle => 'Enter the PIN again';
+
+  @override
+  String get pinMismatch => 'The PINs did not match. Try again.';
+
+  @override
+  String get pinCurrentTitle => 'Enter your current PIN';
+
+  @override
+  String get changePin => 'Change PIN';
+
+  @override
+  String get pinChanged => 'PIN changed';
+
+  @override
+  String get pinDelete => 'Delete';
+
+  @override
+  String pinDigitsEntered(int entered, int total) {
+    return '$entered of $total digits entered';
+  }
 }

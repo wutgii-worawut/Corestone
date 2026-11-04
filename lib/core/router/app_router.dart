@@ -22,6 +22,14 @@ class AppRouter extends RootStackRouter {
     AutoRoute(page: ChangeThemeRoute.page, guards: [_authGuard]),
     AutoRoute(page: ChangeLanguageRoute.page, guards: [_authGuard]),
     AutoRoute(page: DeleteAccountRoute.page, guards: [_authGuard]),
-    AutoRoute(page: LoginRoute.page),
+    AutoRoute(page: ChangePinRoute.page, guards: [_authGuard]),
+    // No transition, so a sign-out never animates app content out from
+    // under the lock.
+    CustomRoute<void>(
+      page: LoginRoute.page,
+      transitionsBuilder: TransitionsBuilders.noTransition,
+      duration: Duration.zero,
+      reverseDuration: Duration.zero,
+    ),
   ];
 }

@@ -44,6 +44,11 @@ class SettingsScreen extends StatelessWidget {
                 unawaited(context.router.push(const ChangeLanguageRoute())),
           ),
           ListTile(
+            leading: const Icon(Icons.pin_outlined),
+            title: Text(l10n.changePin),
+            onTap: () => unawaited(context.router.push(const ChangePinRoute())),
+          ),
+          ListTile(
             leading: const Icon(Icons.logout),
             title: Text(l10n.signOut),
             onTap: () => unawaited(_confirmSignOut(context)),

@@ -7,6 +7,8 @@ import 'package:corestone/core/router/auth_guard.dart';
 import 'package:corestone/core/storage/prefs.dart';
 import 'package:corestone/core/storage/secure_store.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
+import 'package:corestone/features/app_lock/app_lock_cubit.dart';
+import 'package:corestone/features/app_lock/pin_repository.dart';
 import 'package:corestone/features/auth/data/fake_auth_repository.dart';
 import 'package:corestone/features/auth/data/rest_account_repository.dart';
 import 'package:corestone/features/auth/data/rest_auth_repository.dart';
@@ -19,7 +21,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 final sl = GetIt.instance;
 
-void configureDependencies(AppConfig config) {
+/// [pins] lets tests swap in a cheaper hash.
+void configureDependencies(AppConfig config, {PinRepository? pins}) {
   // Auth calls and retries skip the auth interceptor, so a 401 on refresh
   // cannot trigger another refresh.
   final authApi = ApiClient(config);
@@ -56,6 +59,11 @@ void configureDependencies(AppConfig config) {
     )
     ..registerSingleton<SessionCubit>(
       SessionCubit(sl(), sl()),
+      dispose: (cubit) => cubit.close(),
+    )
+    ..registerSingleton<PinRepository>(pins ?? PinRepository(secure))
+    ..registerSingleton<AppLockCubit>(
+      AppLockCubit(sl(), sl()),
       dispose: (cubit) => cubit.close(),
     )
     ..registerSingleton<AppRouter>(AppRouter(AuthGuard(sl())));

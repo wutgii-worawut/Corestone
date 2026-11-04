@@ -30,5 +30,18 @@
   "deleteAccount": "ลบบัญชี",
   "deleteAccountTitle": "ต้องการลบบัญชีของคุณหรือไม่",
   "deleteAccountBody": "บัญชีและข้อมูลทั้งหมดของคุณจะถูกลบอย่างถาวร แล้วคุณจะออกจากระบบ การดำเนินการนี้ย้อนกลับไม่ได้",
-  "deleteAccountConfirm": "ลบบัญชีของฉัน"
+  "deleteAccountConfirm": "ลบบัญชีของฉัน",
+  "lockTitle": "กรอก PIN ของคุณ",
+  "wrongPin": "{count, plural, other{PIN ไม่ถูกต้อง เหลืออีก {count} ครั้งก่อนออกจากระบบ}}",
+  "lockedOut": "กำลังออกจากระบบ…",
+  "forgotPin": "ลืม PIN? ออกจากระบบ",
+  "pinCreateTitle": "ตั้ง PIN 6 หลัก",
+  "pinCreateSubtitle": "คุณจะใช้ PIN นี้เพื่อเปิดแอป",
+  "pinConfirmTitle": "กรอก PIN อีกครั้ง",
+  "pinMismatch": "PIN ไม่ตรงกัน กรุณาลองอีกครั้ง",
+  "pinCurrentTitle": "กรอก PIN ปัจจุบัน",
+  "changePin": "เปลี่ยน PIN",
+  "pinChanged": "เปลี่ยน PIN แล้ว",
+  "pinDelete": "ลบ",
+  "pinDigitsEntered": "กรอกแล้ว {entered} จาก {total} หลัก"
 }
