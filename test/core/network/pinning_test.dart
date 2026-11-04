@@ -60,7 +60,7 @@ void main() {
 
     tearDown(() => server.close());
 
-    Future<Object> call(List<String> pins) async {
+    Future<Object> call(List<String> pins, {String scheme = 'https'}) async {
       final dio = Dio()
         ..httpClientAdapter = IOHttpClientAdapter(
           createHttpClient: () => pinnedHttpClient(
@@ -69,7 +69,7 @@ void main() {
           ),
         );
       try {
-        return (await dio.get<String>('https://127.0.0.1:${server.port}/me'))
+        return (await dio.get<String>('$scheme://127.0.0.1:${server.port}/me'))
             .data!;
       } on DioException catch (e) {
         return mapDioError(e);
@@ -82,6 +82,12 @@ void main() {
 
     test('a wrong pin fails before any request byte is sent', () async {
       expect(await call([otherPin]), const PinningFailure());
+      expect(bytesReceived, 0);
+    });
+
+    test('http is refused when pins are set', () async {
+      final pin = sha256.convert(_certDer()).toString();
+      expect(await call([pin], scheme: 'http'), const PinningFailure());
       expect(bytesReceived, 0);
     });
   });

@@ -51,6 +51,32 @@ void main() {
     });
   });
 
+  test('a non-JSON error body keeps its status', () async {
+    expect(
+      await _me(FakeAdapter.json(503, '<html>down</html>')),
+      const Left<Failure, String>(MaintenanceFailure()),
+    );
+    expect(
+      await _me(FakeAdapter.json(401, 'Unauthorized')),
+      const Left<Failure, String>(UnauthorizedFailure()),
+    );
+  });
+
+  test('a redirect is not followed', () async {
+    expect(
+      await _me(FakeAdapter.json(302, '')),
+      const Left<Failure, String>(BadResponseFailure()),
+    );
+  });
+
+  test('an empty success body parses as null', () async {
+    final client = ApiClient(_config, adapter: FakeAdapter.json(204, ''));
+    expect(
+      await client.delete('/me', parse: (json) => json),
+      const Right<Failure, Object?>(null),
+    );
+  });
+
   test('malformed JSON is a BadResponseFailure', () async {
     expect(
       await _me(FakeAdapter.json(200, '{"name":')),
@@ -73,6 +99,7 @@ void main() {
       interceptors: [
         InterceptorsWrapper(
           onRequest: (options, handler) {
+            expect(options.followRedirects, isFalse);
             seen.add(options.uri);
             handler.next(options);
           },

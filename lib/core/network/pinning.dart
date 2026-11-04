@@ -27,9 +27,8 @@ HttpClient pinnedHttpClient(List<String> pins, {SecurityContext? context}) =>
     HttpClient()
       ..findProxy = ((_) => 'DIRECT')
       ..connectionFactory = (uri, proxyHost, proxyPort) async {
-        if (uri.scheme != 'https') {
-          return Socket.startConnect(uri.host, uri.port);
-        }
+        // A plain socket could never be pin-checked.
+        if (uri.scheme != 'https') throw PinMismatchException(uri.host);
         final task = await SecureSocket.startConnect(
           uri.host,
           uri.port,

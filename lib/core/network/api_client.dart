@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:corestone/core/config/app_config.dart';
 import 'package:corestone/core/errors/failure.dart';
 import 'package:corestone/core/network/error_mapper.dart';
@@ -23,6 +25,10 @@ class ApiClient {
            baseUrl: config.apiBaseUrl,
            connectTimeout: config.apiTimeout,
            receiveTimeout: config.apiTimeout,
+           // A redirect could leave https or the pinned host.
+           followRedirects: false,
+           // Decoded in _send, so a non-JSON error body keeps its status.
+           responseType: ResponseType.plain,
          ),
        ) {
     _dio.httpClientAdapter =
@@ -41,38 +47,39 @@ class ApiClient {
     String path, {
     required Parse<T> parse,
     Map<String, Object?>? query,
-  }) => _send(() => _dio.get<Object?>(path, queryParameters: query), parse);
+  }) => _send(() => _dio.get<String>(path, queryParameters: query), parse);
 
   ResultFuture<T> post<T>(
     String path, {
     required Parse<T> parse,
     Object? data,
-  }) => _send(() => _dio.post<Object?>(path, data: data), parse);
+  }) => _send(() => _dio.post<String>(path, data: data), parse);
 
   ResultFuture<T> put<T>(
     String path, {
     required Parse<T> parse,
     Object? data,
-  }) => _send(() => _dio.put<Object?>(path, data: data), parse);
+  }) => _send(() => _dio.put<String>(path, data: data), parse);
 
   ResultFuture<T> delete<T>(
     String path, {
     required Parse<T> parse,
     Object? data,
-  }) => _send(() => _dio.delete<Object?>(path, data: data), parse);
+  }) => _send(() => _dio.delete<String>(path, data: data), parse);
 
   ResultFuture<T> _send<T>(
-    Future<Response<Object?>> Function() request,
+    Future<Response<String>> Function() request,
     Parse<T> parse,
   ) async {
-    final Response<Object?> response;
+    final Response<String> response;
     try {
       response = await request();
     } on DioException catch (e) {
       return Left(mapDioError(e));
     }
     try {
-      return Right(parse(response.data));
+      final body = response.data ?? '';
+      return Right(parse(body.isEmpty ? null : jsonDecode(body)));
     } on Object {
       return const Left(BadResponseFailure());
     }

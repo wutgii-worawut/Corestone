@@ -30,6 +30,14 @@ void main() {
     expect((await get('/me')).$1, 200);
   });
 
+  test('a forced bodiless status keeps the connection usable', () async {
+    for (final status in [204, 304]) {
+      await get('/__mock/next?status=$status');
+      expect((await get('/me')).$1, status);
+      expect((await get('/me')).$1, 200);
+    }
+  });
+
   test('unknown routes are 404', () async {
     expect((await get('/nope')).$1, 404);
   });

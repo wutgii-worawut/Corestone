@@ -43,10 +43,14 @@ Future<HttpServer> startMockServer({int port = 8080}) async {
   return server;
 }
 
-void _json(HttpResponse response, int status, Object? body) => response
-  ..statusCode = status
-  ..headers.contentType = ContentType.json
-  ..write(jsonEncode(body));
+void _json(HttpResponse response, int status, Object? body) {
+  response.statusCode = status;
+  // 204 and 304 must not carry a body, or a kept-alive connection desyncs.
+  if (status == 204 || status == 304) return;
+  response
+    ..headers.contentType = ContentType.json
+    ..write(jsonEncode(body));
+}
 
 Future<void> main(List<String> args) async {
   final server = await startMockServer(
