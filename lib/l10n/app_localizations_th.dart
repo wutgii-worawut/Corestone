@@ -38,4 +38,10 @@ class AppLocalizationsTh extends AppLocalizations {
 
   @override
   String get languageThai => 'ไทย';
+
+  @override
+  String get signIn => 'เข้าสู่ระบบ';
+
+  @override
+  String get signOut => 'ออกจากระบบ';
 }

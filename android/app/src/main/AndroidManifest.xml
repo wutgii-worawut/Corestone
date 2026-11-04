@@ -1,6 +1,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- No backup: restored flutter_secure_storage data has no Keystore key
+         on the new device, and the session must not leave the device. -->
     <application
+        android:allowBackup="false"
         android:label="@string/app_name"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">

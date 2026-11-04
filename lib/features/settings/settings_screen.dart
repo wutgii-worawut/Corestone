@@ -6,6 +6,7 @@ import 'package:corestone/core/locale/locale_cubit.dart';
 import 'package:corestone/core/network/api_client.dart';
 import 'package:corestone/core/router/app_router.gr.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
+import 'package:corestone/features/auth/session_cubit.dart';
 import 'package:corestone/features/settings/change_language_screen.dart';
 import 'package:corestone/features/settings/change_theme_screen.dart';
 import 'package:corestone/l10n/l10n.dart';
@@ -41,6 +42,11 @@ class SettingsScreen extends StatelessWidget {
             ),
             onTap: () =>
                 unawaited(context.router.push(const ChangeLanguageRoute())),
+          ),
+          ListTile(
+            leading: const Icon(Icons.logout),
+            title: Text(l10n.signOut),
+            onTap: () => unawaited(sl<SessionCubit>().signOut()),
           ),
           if (kDebugMode)
             ListTile(

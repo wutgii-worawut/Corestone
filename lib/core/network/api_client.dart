@@ -67,6 +67,14 @@ class ApiClient {
     Object? data,
   }) => _send(() => _dio.delete<String>(path, data: data), parse);
 
+  /// Sends prepared [options] as they are and throws [DioException] on
+  /// failure. The auth interceptor retries through this on a client without
+  /// itself.
+  // dynamic, because any other type argument makes Dio rewrite
+  // options.responseType and the caller would get a Map, not its String.
+  Future<Response<dynamic>> fetch(RequestOptions options) =>
+      _dio.fetch<dynamic>(options);
+
   ResultFuture<T> _send<T>(
     Future<Response<String>> Function() request,
     Parse<T> parse,
