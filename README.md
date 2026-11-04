@@ -161,6 +161,10 @@ tool/update_goldens.sh verify   # run the golden tests as CI does
 
 ## CI
 
-Pull requests run `analyze` and `test` only (`.github/workflows/ci.yml`).
-Android and iOS builds live in `.github/workflows/build.yml` and run only when
-started by hand: `gh workflow run build.yml --ref <branch>`.
+GitHub CI is disabled for now, so pull requests show no checks. Check locally
+with `fvm flutter analyze` and `fvm flutter test`. The workflows stay in
+`.github/workflows/`: `ci.yml` runs `analyze` and `test`, `build.yml` builds
+Android and iOS by hand, and `distribute.yml` sends a signed release APK to
+Firebase App Distribution by hand. All three are disabled. iOS builds are not
+verified yet. `tool/template_smoke.sh` is the template's done check; see
+TEMPLATE.md.

@@ -127,8 +127,9 @@ const keptFiles = {
   'test/tool/new_project_test.dart',
 };
 
-/// The template's own build plan; a generated app does not ship it.
-const templateOnlyFiles = ['spec/template-plan.md'];
+/// The template's own build plan and done check; a generated app does not
+/// ship them.
+const templateOnlyFiles = ['spec/template-plan.md', 'tool/template_smoke.sh'];
 
 const _androidText = [
   'android/**/*.kts',
@@ -306,11 +307,22 @@ void main(List<String> args) {
     return;
   }
   changes.forEach(stdout.writeln);
-  stdout
-    ..writeln('${changes.length} changes')
-    ..writeln(
-      'next: fvm flutter pub get, then '
-      'fvm dart fix --apply --code=directives_ordering, then commit. '
-      'See TEMPLATE.md.',
-    );
+  stdout.writeln('${changes.length} changes');
+  // The new package name changes the import order the lints require.
+  for (final step in [
+    ['pub', 'get'],
+    ['fix', '--apply', '--code=directives_ordering'],
+  ]) {
+    stdout.writeln('running dart ${step.join(' ')}');
+    final result = Process.runSync(Platform.resolvedExecutable, step);
+    if (result.exitCode != 0) {
+      stderr
+        ..write(result.stdout)
+        ..write(result.stderr)
+        ..writeln('dart ${step.join(' ')} failed; run it by hand');
+      exitCode = 1;
+      return;
+    }
+  }
+  stdout.writeln('next: review the diff and commit. See TEMPLATE.md.');
 }
