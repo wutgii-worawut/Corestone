@@ -44,13 +44,23 @@ final class AppLockLockedOut extends AppLockState {
 /// the background, and signs out after [maxAttempts] wrong PINs in a row,
 /// counted across restarts. Any sign-out, for any reason, clears the PIN.
 class AppLockCubit extends Cubit<AppLockState> {
-  AppLockCubit(this._pins, this._session, {DateTime Function()? now})
-    : _now = now ?? DateTime.now,
-      // Fails closed until [load] reads the store.
-      super(const AppLockLocked(0)) {
+  AppLockCubit(
+    this._pins,
+    this._session, {
+    DateTime Function()? now,
+    Duration Function()? elapsed,
+  }) : _now = now ?? DateTime.now,
+       _elapsed = elapsed ?? _monotonicClock(),
+       // Fails closed until [load] reads the store.
+       super(const AppLockLocked(0)) {
     _sessionChanges = _session.stream.listen((session) async {
       if (session is SessionUnauthenticated) await _clear();
     });
+  }
+
+  static Duration Function() _monotonicClock() {
+    final stopwatch = Stopwatch()..start();
+    return () => stopwatch.elapsed;
   }
 
   static const maxAttempts = 5;
@@ -59,8 +69,10 @@ class AppLockCubit extends Cubit<AppLockState> {
   final PinRepository _pins;
   final SessionCubit _session;
   final DateTime Function() _now;
+  final Duration Function() _elapsed;
   late final StreamSubscription<SessionState> _sessionChanges;
   DateTime? _hiddenAt;
+  Duration? _hiddenElapsed;
 
   /// The stored count, kept here so a lock after a wrong PIN in the change
   /// flow shows the right number without a store read.
@@ -103,17 +115,25 @@ class AppLockCubit extends Cubit<AppLockState> {
   /// Signs out, which clears the PIN, so the user can sign in again.
   Future<void> forgotPin() => _lockOut();
 
-  void appHidden() => _hiddenAt ??= _now();
+  void appHidden() {
+    _hiddenAt ??= _now();
+    _hiddenElapsed ??= _elapsed();
+  }
 
   void appShown() {
     final hiddenAt = _hiddenAt;
+    final hiddenElapsed = _hiddenElapsed;
     _hiddenAt = null;
-    if (hiddenAt == null || state is! AppLockUnlocked) return;
-    final away = _now().difference(hiddenAt);
-    // A clock set backwards counts as too long, so it cannot skip the lock.
-    // shortcut: wall clock, so a clock set back by the time away skips the
-    // lock; move to the platform's elapsed-realtime clock if that matters.
-    if (away >= backgroundTimeout || away.isNegative) {
+    _hiddenElapsed = null;
+    if (hiddenAt == null || hiddenElapsed == null) return;
+    if (state is! AppLockUnlocked) return;
+    final wall = _now().difference(hiddenAt);
+    final monotonic = _elapsed() - hiddenElapsed;
+    // The wall clock can be set back, and the monotonic clock stops while
+    // the device sleeps, so the longer of the two decides. A clock set
+    // backwards counts as too long.
+    final away = wall > monotonic ? wall : monotonic;
+    if (away >= backgroundTimeout || wall.isNegative) {
       emit(AppLockLocked(_failed));
     }
   }

@@ -19,8 +19,10 @@ void main() {
   late SessionCubit session;
   late AppLockCubit cubit;
   late DateTime now;
+  late Duration elapsed;
 
-  AppLockCubit start() => AppLockCubit(pins, session, now: () => now);
+  AppLockCubit start() =>
+      AppLockCubit(pins, session, now: () => now, elapsed: () => elapsed);
 
   setUp(() async {
     FlutterSecureStorage.setMockInitialValues({});
@@ -29,6 +31,7 @@ void main() {
     session = SessionCubit(FakeAuthRepository(), TokenStore(store));
     await session.signIn(email: 'a@b.c', password: 'pw');
     now = DateTime(2026);
+    elapsed = Duration.zero;
     cubit = start();
   });
 
@@ -99,6 +102,23 @@ void main() {
       await unlocked();
       cubit.appHidden();
       now = now.subtract(const Duration(minutes: 5));
+      cubit.appShown();
+      expect(cubit.state, isA<AppLockLocked>());
+    });
+
+    test('a clock set back by exactly the time away still locks', () async {
+      await unlocked();
+      cubit.appHidden();
+      elapsed += const Duration(seconds: 40);
+      cubit.appShown();
+      expect(cubit.state, isA<AppLockLocked>());
+    });
+
+    test('a device that slept through the timeout still locks', () async {
+      await unlocked();
+      cubit.appHidden();
+      now = now.add(const Duration(minutes: 10));
+      elapsed += const Duration(seconds: 2);
       cubit.appShown();
       expect(cubit.state, isA<AppLockLocked>());
     });
