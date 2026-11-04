@@ -7,11 +7,12 @@ import 'package:corestone/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-String themeModeLabel(AppLocalizations l10n, ThemeMode mode) => switch (mode) {
-  ThemeMode.system => l10n.themeSystem,
-  ThemeMode.light => l10n.themeLight,
-  ThemeMode.dark => l10n.themeDark,
-};
+String themeModeLabel(AppLocalizations l10n, ThemeMode mode) =>
+    switch (mode) {
+      ThemeMode.system => l10n.themeSystem,
+      ThemeMode.light => l10n.themeLight,
+      ThemeMode.dark => l10n.themeDark,
+    };
 
 @RoutePage()
 class ChangeThemeScreen extends StatelessWidget {
