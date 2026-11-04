@@ -6,6 +6,7 @@ class AppConfig {
     required this.apiBaseUrl,
     required this.certPins,
     this.demoMode = false,
+    this.deepLinkHost = '',
     this.apiTimeout = const Duration(seconds: 15),
   });
 
@@ -14,6 +15,7 @@ class AppConfig {
     'API_BASE_URL': String.fromEnvironment('API_BASE_URL'),
     'CERT_SHA256': String.fromEnvironment('CERT_SHA256'),
     'DEMO_MODE': String.fromEnvironment('DEMO_MODE'),
+    'DEEP_LINK_HOST': String.fromEnvironment('DEEP_LINK_HOST'),
   });
 
   factory AppConfig.parse(Map<String, String> env) {
@@ -35,11 +37,19 @@ class AppConfig {
     if (demoMode && flavor != AppFlavor.dev) {
       throw StateError('DEMO_MODE is only for dev, not ${flavor.name}.');
     }
+    final deepLinkHost = env['DEEP_LINK_HOST'] ?? '';
+    if (deepLinkHost.isNotEmpty &&
+        Uri.tryParse('https://$deepLinkHost')?.host != deepLinkHost) {
+      throw StateError(
+        'DEEP_LINK_HOST "$deepLinkHost" must be a lowercase host name only.',
+      );
+    }
     return AppConfig(
       flavor: flavor,
       apiBaseUrl: apiBaseUrl,
       certPins: _parsePins(env['CERT_SHA256'] ?? ''),
       demoMode: demoMode,
+      deepLinkHost: deepLinkHost,
     );
   }
 
@@ -54,6 +64,11 @@ class AppConfig {
   /// Signs in and deletes accounts against an in-memory fake instead of the
   /// API, so the template runs with no backend. Dev only.
   final bool demoMode;
+
+  /// The https host this flavor's App Links and Universal Links use, from
+  /// `DEEP_LINK_HOST`. Empty turns deep links off. Keep it equal to the
+  /// flavor's `deepLinkHost` in Gradle and `DEEP_LINK_HOST` in the xcconfig.
+  final String deepLinkHost;
 
   /// Connect and receive timeout for every API call.
   final Duration apiTimeout;

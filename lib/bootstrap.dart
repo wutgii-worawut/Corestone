@@ -1,7 +1,9 @@
 import 'dart:async';
 
+import 'package:app_links/app_links.dart';
 import 'package:corestone/app.dart';
 import 'package:corestone/core/config/app_config.dart';
+import 'package:corestone/core/deep_link/deep_link_service.dart';
 import 'package:corestone/core/di/injection.dart';
 import 'package:corestone/core/locale/locale_cubit.dart';
 import 'package:corestone/core/push/push_service.dart';
@@ -24,6 +26,7 @@ void bootstrap() {
     ).wait;
     await sl<AppLockCubit>().load();
     runApp(const App());
+    sl<DeepLinkService>().start(AppLinks().uriLinkStream);
     // After the first frame, so a slow Firebase start never delays it.
     unawaited(sl<PushService>().start(sl()));
   }, (error, stack) => debugPrint('Uncaught zone error: $error\n$stack'));

@@ -1,3 +1,4 @@
 #include "Release.xcconfig"
 APP_DISPLAY_NAME = Corestone
 PRODUCT_BUNDLE_IDENTIFIER = com.wutstack.corestone
+DEEP_LINK_HOST = links.example.com

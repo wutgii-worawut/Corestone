@@ -37,20 +37,25 @@ android {
     }
 
     flavorDimensions += "env"
+    // deepLinkHost must equal DEEP_LINK_HOST in config/<flavor>.json and
+    // ios/Flutter/*-<flavor>.xcconfig; deep_link_host_test checks it.
     productFlavors {
         create("dev") {
             dimension = "env"
             applicationIdSuffix = ".dev"
             resValue("string", "app_name", "Corestone Dev")
+            manifestPlaceholders["deepLinkHost"] = "dev.links.example.com"
         }
         create("stage") {
             dimension = "env"
             applicationIdSuffix = ".stage"
             resValue("string", "app_name", "Corestone Stage")
+            manifestPlaceholders["deepLinkHost"] = "stage.links.example.com"
         }
         create("prod") {
             dimension = "env"
             resValue("string", "app_name", "Corestone")
+            manifestPlaceholders["deepLinkHost"] = "links.example.com"
         }
     }
 
