@@ -14,5 +14,6 @@ class AppRouter extends RootStackRouter {
       ],
     ),
     AutoRoute(page: ChangeThemeRoute.page),
+    AutoRoute(page: ChangeLanguageRoute.page),
   ];
 }

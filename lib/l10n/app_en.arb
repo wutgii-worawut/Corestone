@@ -1,0 +1,13 @@
+{
+  "@@locale": "en",
+  "home": "Home",
+  "settings": "Settings",
+  "theme": "Theme",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "language": "Language",
+  "languageSystem": "System",
+  "languageEnglish": "English",
+  "languageThai": "Thai"
+}

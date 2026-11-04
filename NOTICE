@@ -4,3 +4,9 @@ Copyright 2026 wutstack
 This product includes software derived from Skelter by SolGuruz
 (https://github.com/solguruz/skelter), licensed under the Apache License,
 Version 2.0. Files ported from Skelter were modified for Corestone.
+
+Fonts, each licensed under the SIL Open Font License, Version 1.1:
+- Inter, Copyright 2020 The Inter Project Authors (https://github.com/rsms/inter).
+  See assets/fonts/Inter/OFL.txt.
+- Noto Sans Thai, Copyright 2022 The Noto Project Authors
+  (https://github.com/notofonts/thai). See assets/fonts/NotoSansThai/OFL.txt.

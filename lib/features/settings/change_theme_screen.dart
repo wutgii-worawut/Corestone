@@ -2,14 +2,17 @@ import 'dart:async';
 
 import 'package:auto_route/auto_route.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
+import 'package:corestone/l10n/app_localizations.dart';
+import 'package:corestone/l10n/l10n.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-String themeModeLabel(ThemeMode mode) => switch (mode) {
-  ThemeMode.system => 'System',
-  ThemeMode.light => 'Light',
-  ThemeMode.dark => 'Dark',
-};
+String themeModeLabel(AppLocalizations l10n, ThemeMode mode) =>
+    switch (mode) {
+      ThemeMode.system => l10n.themeSystem,
+      ThemeMode.light => l10n.themeLight,
+      ThemeMode.dark => l10n.themeDark,
+    };
 
 @RoutePage()
 class ChangeThemeScreen extends StatelessWidget {
@@ -19,7 +22,7 @@ class ChangeThemeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final cubit = context.watch<ThemeCubit>();
     return Scaffold(
-      appBar: AppBar(title: const Text('Theme')),
+      appBar: AppBar(title: Text(context.l10n.theme)),
       body: RadioGroup<ThemeMode>(
         groupValue: cubit.state,
         onChanged: (mode) {
@@ -30,7 +33,7 @@ class ChangeThemeScreen extends StatelessWidget {
             for (final mode in ThemeMode.values)
               RadioListTile<ThemeMode>(
                 value: mode,
-                title: Text(themeModeLabel(mode)),
+                title: Text(themeModeLabel(context.l10n, mode)),
               ),
           ],
         ),

@@ -1,0 +1,13 @@
+{
+  "@@locale": "th",
+  "home": "หน้าหลัก",
+  "settings": "การตั้งค่า",
+  "theme": "ธีม",
+  "themeSystem": "ตามระบบ",
+  "themeLight": "สว่าง",
+  "themeDark": "มืด",
+  "language": "ภาษา",
+  "languageSystem": "ตามระบบ",
+  "languageEnglish": "ภาษาอังกฤษ",
+  "languageThai": "ภาษาไทย"
+}
