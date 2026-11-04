@@ -4,8 +4,14 @@ library;
 import 'package:alchemist/alchemist.dart';
 import 'package:corestone/core/locale/locale_cubit.dart';
 import 'package:corestone/core/storage/prefs.dart';
+import 'package:corestone/core/storage/secure_store.dart';
 import 'package:corestone/core/theme/app_theme.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
+import 'package:corestone/features/app_lock/app_lock_cubit.dart';
+import 'package:corestone/features/app_lock/pin_repository.dart';
+import 'package:corestone/features/auth/data/fake_auth_repository.dart';
+import 'package:corestone/features/auth/data/token_store.dart';
+import 'package:corestone/features/auth/session_cubit.dart';
 import 'package:corestone/features/settings/settings_screen.dart';
 import 'package:corestone/l10n/app_localizations.dart';
 import 'package:flutter/material.dart';
@@ -14,6 +20,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:shared_preferences_platform_interface/in_memory_shared_preferences_async.dart';
 import 'package:shared_preferences_platform_interface/shared_preferences_async_platform_interface.dart';
+
+import '../../helpers/fake_biometric_service.dart';
 
 void main() {
   SharedPreferencesAsyncPlatform.instance =
@@ -28,6 +36,13 @@ void main() {
         providers: [
           BlocProvider(create: (_) => ThemeCubit(prefs)),
           BlocProvider(create: (_) => LocaleCubit(prefs)..setLocale(locale)),
+          BlocProvider(
+            create: (_) => AppLockCubit(
+              PinRepository(SecureStore()),
+              SessionCubit(FakeAuthRepository(), TokenStore(SecureStore())),
+              FakeBiometricService(available: false),
+            ),
+          ),
         ],
         child: Theme(
           data: AppTheme.light,

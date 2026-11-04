@@ -60,5 +60,8 @@
         "type": "int"
       }
     }
-  }
+  },
+  "biometricUnlock": "Unlock with biometrics",
+  "biometricReason": "Confirm it is you to open the app",
+  "biometricUsePin": "Use PIN"
 }

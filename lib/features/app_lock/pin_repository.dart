@@ -12,8 +12,10 @@ const pinLength = 6;
 /// count after this check, so it is 0 when [correct].
 typedef PinCheck = ({bool correct, int failedAttempts});
 
-/// Keeps a salted PBKDF2-HMAC-SHA256 hash of the app PIN and the failed
-/// attempt counter in one [SecureStore] key, never the PIN itself. One key
+/// Keeps a salted PBKDF2-HMAC-SHA256 hash of the app PIN, the failed
+/// attempt counter and the biometric unlock choice in one [SecureStore] key,
+/// never the PIN itself. The biometric choice lives with the PIN, so
+/// whatever clears the PIN clears it too. One key
 /// means a crash can never pair a new hash with an old counter. Operations
 /// run one at a time, so two checks cannot both read the same counter.
 class PinRepository {
@@ -52,13 +54,41 @@ class PinRepository {
       _serial(() async => (await _read())?.failed ?? 0);
 
   /// Replaces any PIN with [pin], with a new salt and no failed attempts.
+  /// Keeps the biometric choice of a readable earlier PIN.
   Future<void> setPin(String pin) => _serial(() async {
     if (!isValidPin(pin)) throw ArgumentError('PIN must be $pinLength digits');
+    final biometric = await _read().then(
+      (record) => record?.biometric ?? false,
+      onError: (Object _) => false,
+    );
     final salt = _randomBytes(16);
     final hash = await _derive(pin, salt, iterations);
     await _write(
-      _PinRecord(salt: salt, hash: hash, iterations: iterations, failed: 0),
+      _PinRecord(
+        salt: salt,
+        hash: hash,
+        iterations: iterations,
+        failed: 0,
+        biometric: biometric,
+      ),
     );
+  });
+
+  /// False when there is no PIN. Throws [FormatException] for an unreadable
+  /// record.
+  Future<bool> biometricEnabled() =>
+      _serial(() async => (await _read())?.biometric ?? false);
+
+  /// Does nothing when there is no PIN, since the choice means nothing then.
+  Future<void> setBiometric({required bool enabled}) => _serial(() async {
+    final record = await _read();
+    if (record != null) await _write(record.copyWith(biometric: enabled));
+  });
+
+  /// After an unlock that did not use the PIN, such as biometrics.
+  Future<void> resetFailedAttempts() => _serial(() async {
+    final record = await _read();
+    if (record != null) await _write(record.copyWith(failed: 0));
   });
 
   /// Counts the attempt as failed before hashing, so killing the app during
@@ -66,13 +96,13 @@ class PinRepository {
   Future<PinCheck> verify(String pin) => _serial(() async {
     final record = await _read();
     if (record == null) return (correct: false, failedAttempts: 0);
-    final counted = record.withFailed(record.failed + 1);
+    final counted = record.copyWith(failed: record.failed + 1);
     await _write(counted);
     final hash = await _derive(pin, record.salt, record.iterations);
     if (!_constantTimeEquals(hash, record.hash)) {
       return (correct: false, failedAttempts: counted.failed);
     }
-    await _write(record.withFailed(0));
+    await _write(record.copyWith(failed: 0));
     return (correct: true, failedAttempts: 0);
   });
 
@@ -144,6 +174,7 @@ final class _PinRecord {
     required this.hash,
     required this.iterations,
     required this.failed,
+    required this.biometric,
   });
 
   factory _PinRecord.fromJson(Object? json) {
@@ -153,6 +184,8 @@ final class _PinRecord {
       hash: base64Decode(map['hash']! as String),
       iterations: map['iterations']! as int,
       failed: map['failed']! as int,
+      // Absent in records written before biometric unlock existed.
+      biometric: map['biometric'] as bool? ?? false,
     );
   }
 
@@ -160,12 +193,14 @@ final class _PinRecord {
   final List<int> hash;
   final int iterations;
   final int failed;
+  final bool biometric;
 
-  _PinRecord withFailed(int failed) => _PinRecord(
+  _PinRecord copyWith({int? failed, bool? biometric}) => _PinRecord(
     salt: salt,
     hash: hash,
     iterations: iterations,
-    failed: failed,
+    failed: failed ?? this.failed,
+    biometric: biometric ?? this.biometric,
   );
 
   Map<String, Object> toJson() => {
@@ -173,5 +208,6 @@ final class _PinRecord {
     'hash': base64Encode(hash),
     'iterations': iterations,
     'failed': failed,
+    'biometric': biometric,
   };
 }

@@ -72,6 +72,7 @@ class _AppLockGateState extends State<AppLockGate> with WidgetsBindingObserver {
         state: lock,
         onPin: _lock.unlock,
         onForgotPin: () => unawaited(_lock.forgotPin()),
+        onBiometric: _lock.unlockWithBiometric,
       ),
     };
     _gated = gate != null;

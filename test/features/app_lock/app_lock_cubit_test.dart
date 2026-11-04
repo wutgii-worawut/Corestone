@@ -10,6 +10,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import '../../helpers/fake_biometric_service.dart';
+
 const pin = '135790';
 const wrong = '000000';
 
@@ -21,8 +23,13 @@ void main() {
   late DateTime now;
   late Duration elapsed;
 
-  AppLockCubit start() =>
-      AppLockCubit(pins, session, now: () => now, elapsed: () => elapsed);
+  AppLockCubit start() => AppLockCubit(
+    pins,
+    session,
+    FakeBiometricService(available: false),
+    now: () => now,
+    elapsed: () => elapsed,
+  );
 
   setUp(() async {
     FlutterSecureStorage.setMockInitialValues({});
@@ -238,7 +245,11 @@ void main() {
 
   test('an unreadable store does not stop load', () async {
     await cubit.close();
-    cubit = AppLockCubit(PinRepository(_BrokenStore()), session);
+    cubit = AppLockCubit(
+      PinRepository(_BrokenStore()),
+      session,
+      FakeBiometricService(),
+    );
     await expectLater(cubit.load(), completes);
     expect(session.state, isA<SessionUnauthenticated>());
   });

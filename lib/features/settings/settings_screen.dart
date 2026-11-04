@@ -6,6 +6,7 @@ import 'package:corestone/core/locale/locale_cubit.dart';
 import 'package:corestone/core/network/api_client.dart';
 import 'package:corestone/core/router/app_router.gr.dart';
 import 'package:corestone/core/theme/theme_cubit.dart';
+import 'package:corestone/features/app_lock/app_lock_cubit.dart';
 import 'package:corestone/features/auth/session_cubit.dart';
 import 'package:corestone/features/settings/change_language_screen.dart';
 import 'package:corestone/features/settings/change_theme_screen.dart';
@@ -48,6 +49,7 @@ class SettingsScreen extends StatelessWidget {
             title: Text(l10n.changePin),
             onTap: () => unawaited(context.router.push(const ChangePinRoute())),
           ),
+          const _BiometricTile(),
           ListTile(
             leading: const Icon(Icons.logout),
             title: Text(l10n.signOut),
@@ -78,6 +80,48 @@ class SettingsScreen extends StatelessWidget {
       ),
     );
   }
+}
+
+/// Settings is only reachable unlocked, so a PIN exists. Hidden on a device
+/// without enrolled biometrics.
+class _BiometricTile extends StatefulWidget {
+  const _BiometricTile();
+
+  @override
+  State<_BiometricTile> createState() => _BiometricTileState();
+}
+
+class _BiometricTileState extends State<_BiometricTile> {
+  late final _lock = context.read<AppLockCubit>();
+  late final Future<bool> _available = _lock.biometricAvailable();
+  bool _busy = false;
+
+  Future<void> _toggle(bool enable) async {
+    final l10n = context.l10n;
+    setState(() => _busy = true);
+    if (enable) {
+      await _lock.enableBiometric((
+        reason: l10n.biometricReason,
+        cancel: l10n.cancel,
+      ));
+    } else {
+      await _lock.disableBiometric();
+    }
+    if (mounted) setState(() => _busy = false);
+  }
+
+  @override
+  Widget build(BuildContext context) => FutureBuilder(
+    future: _available,
+    builder: (context, available) => available.data ?? false
+        ? SwitchListTile(
+            secondary: const Icon(Icons.fingerprint),
+            title: Text(context.l10n.biometricUnlock),
+            value: _lock.biometricEnabled,
+            onChanged: _busy ? null : (value) => unawaited(_toggle(value)),
+          )
+        : const SizedBox.shrink(),
+  );
 }
 
 Future<void> _confirmSignOut(BuildContext context) async {
